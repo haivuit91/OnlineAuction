@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+
+	<head>
+		<title>Online Auction</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		
+		<link rel="stylesheet" type="text/css" th:href="@{/resources/css/bootstrap.min.css}" />
+		<link rel="stylesheet" type="text/css" th:href="@{/resources/css/icomoon-social.css}" />
+		<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700,600,800' rel='stylesheet' type='text/css' />
+		<link rel="stylesheet" type="text/css" th:href="@{/resources/css/font-awesome.min.css}" />
+		<link rel="stylesheet" type="text/css" th:href="@{/resources/css/leaflet.css}" />
+		<link rel="stylesheet" type="text/css" th:href="@{/resources/css/main.css}" />
+		<link rel="stylesheet" type="text/css" th:href="@{/resources/css/star-rating.css}" />
+		<link rel="stylesheet" type="text/css" th:href="@{/resources/css/bootstrapValidator.css}" />
+		<link rel="stylesheet" type="text/css" th:href="@{/resources/css/bootstrap-datetimepicker.min.css}" />
+		
+		<script type="text/javascript" th:src="@{/resources/js/jquery-1.9.1.min.js}"></script>
+		<script type="text/javascript" th:src="@{/resources/js/modernizr-2.6.2-respond-1.1.0.min.js}"></script>
+		<script type="text/javascript" th:src="@{/resources/js/jquery.countdown.js}"></script>
+		<script type="text/javascript" th:src="@{/resources/js/star-rating.js}"></script>
+		<script type="text/javascript" th:src="@{/resources/js/bootstrapValidator.js}"></script>
+		<script type="text/javascript" th:src="@{/resources/ckeditor/ckeditor.js}"></script>
+		<script type="text/javascript" th:src="@{/resources/js/jquery.confirm.min.js}"></script>
+	</head>
+	<body>
+	
+		<div th:replace="layout/home_mainmenu :: mainmenu">Main menu</div>
+		<div class="section section-breadcrumbs">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-12">
+						<h1 th:text="${breadcrumbs}">Breadcrumbs</h1>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div th:replace="${layout} :: content">Main content</div>
+		<div th:replace="layout/home_footer :: footer">Footer</div>
+		
+		<script type="text/javascript" th:src="@{/resources/js/bootstrap.min.js}"></script>
+		<script type="text/javascript" th:src="@{/resources/js/leaflet.js}"></script>
+		<script type="text/javascript" th:src="@{/resources/js/jquery.fitvids.js}"></script>
+		<script type="text/javascript" th:src="@{/resources/js/jquery.sequence-min.js}"></script>
+		<script type="text/javascript" th:src="@{/resources/js/jquery.bxslider.js}"></script>
+		<script type="text/javascript" th:src="@{/resources/js/main-menu.js}"></script>
+		<script type="text/javascript" th:src="@{/resources/js/template.js}"></script>
+		<script type="text/javascript" th:src="@{/resources/js/bootstrap-datetimepicker.js}"></script>
+	</body>
+</html>

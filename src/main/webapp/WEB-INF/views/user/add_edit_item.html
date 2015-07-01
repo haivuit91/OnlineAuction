@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org" lang="en"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+	<head>
+	</head>
+	<body>
+		<div class="section" th:fragment="content">
+			<div class="container">
+				<div class="row">
+					<div th:replace="layout/home_sidebar :: sidebar">Sidebar</div>
+					<div class="col-sm-10">
+						<div class="blog-post blog-single-post">
+							<h2>Add new Item</h2>
+							<form role="form" id="add-edit-item-form" th:object="${item}" th:action="@{/item/add-new-item}" enctype="multipart/form-data" th:method="post">
+								<div class="alert alert-danger alert-dismissible fade in" role="alert" th:if="${#fields.hasErrors('*')}">
+									<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+								  		<span aria-hidden="true">&times;</span>
+									</button>
+									<ul>
+								  		<li th:each="err : ${#fields.errors('*')}" th:text="${err}">Input is incorrect</li>
+									</ul>
+								</div>
+								<div class="row">
+									<div class="col-sm-6">
+										<div th:class="${#fields.hasErrors('itemTitle')} ? 'form-group has-error' : form-group">
+				        				 	<label for="itemTitle"><b>Item title</b></label>
+											<input class="form-control" id="itemTitle" th:field="*{itemTitle}" type="text" required="required" placeholder="Item title"/>
+										</div>
+										<div th:class="${#fields.hasErrors('bidStartDate')} ? 'form-group has-error' : form-group">
+											<label for="bidStartDate"><b>Bid start date</b></label>
+			        				 		<input class="form-control" id="bidStartDate" th:field="*{bidStartDate}" type="text" readonly="readonly" required="required" placeholder="dd/mm/yyy HH:ii P"/>
+										</div>
+										<div th:class="${#fields.hasErrors('minimumBid')} ? 'form-group has-error' : form-group">
+											<label for="minimumBid"><b>Minimum bid</b></label>
+			        				 		<input class="form-control" id="minimumBid" th:field="*{minimumBid}" type="number" required="required" placeholder="Minimum bid"/>
+										</div>
+										
+									</div>
+									<div class="col-sm-6">
+										<div class="form-group">
+				        				 	<label for="itemThumbnail"><b>Image</b></label>
+											<input class="form-control" id="itemThumbnail" name="file" type="file" />
+										</div>
+										<div th:class="${#fields.hasErrors('bidEndDate')} ? 'form-group has-error' : form-group">
+											<label for="bidEndDate"><b>Bid end date</b></label>
+			        				 		<input class="form-control" id="bidEndDate" th:field="*{bidEndDate}" type="text" readonly="readonly" required="required" placeholder="dd/mm/yyy HH:ii P"/>
+										</div>
+										<div th:class="${#fields.hasErrors('bidIncremenent')} ? 'form-group has-error' : form-group">
+											<label for="bidIncremenent"><b>Bid increment</b></label>
+			        				 		<input class="form-control" id="bidIncremenent" th:field="*{bidIncremenent}" type="number" required="required" placeholder="Bid increment"/>
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div th:class="${#fields.hasErrors('itemDesciption')} ? 'form-group has-error' : form-group">
+			        				 	<label for="itemDesciption"><b>Item description</b></label>
+			        				 	<textarea class="form-control" id="itemDesciption" th:field="*{itemDesciption}" rows="10" placeholder="Item name"></textarea>
+									</div>
+								</div>
+								<div class="form-group">
+									<button type="submit" class="btn pull-right">Add</button>
+									<div class="clearfix"></div>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+			<script type="text/javascript">
+				CKEDITOR.replace('itemDesciption');
+				$(function () {
+					$('#bidStartDate').datetimepicker({
+		                format: "dd/mm/yyyy HH:ii: P",
+		                showMeridian: true,
+		                autoclose: true,
+		                todayBtn: true,
+		                language: 'en',
+		                minuteStep: 10
+		            });
+		            $('#bidEndDate').datetimepicker({
+		                format: "dd/mm/yyyy HH:ii: P",
+		                showMeridian: true,
+		                autoclose: true,
+		                todayBtn: true,
+		                language: 'en',
+		                minuteStep: 10
+		            });
+		            $('#bidStartDate').datetimepicker().on('changeDate', function (ev) {
+		                $('#bidEndDate').datetimepicker('setStartDate', ev.date);
+		            });
+		            $('#bidEndDate').datetimepicker().on('changeDate', function (ev) {
+		                $('#bidStartDate').datetimepicker('setEndDate', ev.date);
+		            });
+				});
+			</script>
+		</div>
+	</body>
+</html>

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org" lang="en"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+	<head>
+	</head>
+	<body>
+		<div class="section" th:fragment="content">
+			<div class="container">
+				<div class="row">
+					<div th:replace="layout/home_sidebar :: sidebar">Sidebar</div>
+					<div class="col-sm-10">
+						<div class="alert alert-success alert-dismissible fade in" role="alert" th:if="${param.success}">
+							<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+							Add new Item successfully
+						</div>
+						<div class="blog-post blog-single-post">
+		        			<h2>Item list</h2>
+		        			<a class="btn btn-blue" th:href="@{/item/add-new-item}">Add item</a>
+							<table class="jobs-list">
+		    					<tr>
+		    						<th>Id</th>
+		    						<th>Image</th>
+		    						<th>Title</th>
+		    						<th>Bid start date</th>
+		    						<th>Bid end date</th>
+		    						<th>Minimum bid</th>
+		    						<th>Bid increment</th>
+		    						<th>Status</th>
+		    						<th></th>
+		    					</tr>
+		    					<tr th:each="item : ${listItem.content}">
+		    						<td th:text="${item.id}">Id</td>
+		    						<td><img th:src="@{'/image/' + ${item.itemThumbnail}}" th:alt="${item.itemTitle}" /></td>
+		    						<td th:text="${item.itemTitle}">Title</td>
+		    						<td th:text="${#calendars.format(item.bidStartDate,'dd/MM/yyyy HH:mm')}">Bid start date</td>
+		    						<td th:text="${#calendars.format(item.bidEndDate,'dd/MM/yyyy HH:mm')}">Bid end date</td>
+		    						<td th:text="${item.minimumBid}">Minimum Bid</td>
+		    						<td th:text="${item.bidIncremenent}">Bid Incremenent</td>
+		    						<td th:text="${item.bidStatus}">Bid status</td>
+		    						<td></td>
+		    					</tr>
+		    				</table>
+							<div class="pagination-wrapper">
+								<ul class="pagination pagination-sm">
+									<li th:if="${currentIndex == 1}" class="disabled">
+										<span aria-hidden="true">&laquo;</span>
+									</li>
+									<li th:unless="${currentIndex == 1}">
+										<a th:href="@{/item/list(page=${currentIndex - 1})}" aria-label="Previous">
+											<span aria-hidden="true">&laquo;</span>
+										</a>
+									</li>
+									<li th:each="i : ${#numbers.sequence(beginIndex, endIndex)}" th:class="${currentIndex == i} ? active">
+										<span th:if="${currentIndex == i}" th:text="${i}"></span>
+										<a th:href="@{/item/list(page=${i})}" th:unless="${currentIndex == i}" th:text="${i}"></a>
+									</li>
+									<li th:if="${currentIndex == listItem.totalPages}" class="disabled">
+										<span aria-hidden="true">&raquo;</span>
+									</li>
+									<li th:unless="${currentIndex == listItem.totalPages}">
+										<a th:href="@{/item/list(page=${currentIndex + 1})}" aria-label="Next">
+											<span aria-hidden="true">&raquo;</span>
+										</a>
+									</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

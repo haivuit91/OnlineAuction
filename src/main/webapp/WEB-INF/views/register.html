@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+	<head>
+	</head>
+	<body>
+		<div class="section" th:fragment="content">
+	    	<div class="container">
+				<div class="row">
+					<div class="col-sm-5 login-center">
+						<div class="alert alert-danger alert-dismissible fade in" role="alert" th:if="${registerError}">
+							<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+						  		<span aria-hidden="true">&times;</span>
+							</button>
+							<span th:text="${registerErrorMsg}">Error msg</span>
+						</div>
+						<div class="basic-login">
+							<form role="form" id="register-form" th:object="${account}" th:action="@{/account/register}" th:method="post">
+								<div th:class="${#fields.hasErrors('accountName')} ? 'form-group has-error' : (${registerErrorAccName} ? 'form-group has-error' : form-group)">
+		        				 	<label for="accountName"><b>Account Name</b></label>
+									<input class="form-control" id="accountName" th:field="*{accountName}" type="text" required="required" placeholder="Account name"/>
+								</div>
+								<div th:class="${#fields.hasErrors('fullName')} ? 'form-group has-error' : form-group">
+		        				 	<label for="fullName"><b>Full Name</b></label>
+									<input class="form-control" id="fullName" th:field="*{fullName}" type="text" required="required" placeholder="Full name"/>
+								</div>
+								<div th:class="${#fields.hasErrors('email')} ? 'form-group has-error' : (${registerErrorEmail} ? 'form-group has-error' : form-group)">
+		        				 	<label for="email"><b>Email</b></label>
+									<input class="form-control" id="email" th:field="*{email}" type="text" required="required" placeholder="Email"/>
+								</div>
+								<div th:class="${#fields.hasErrors('pwd')} ? 'form-group has-error' : (${registerErrorPwd} ? 'form-group has-error' : form-group)">
+		        				 	<label for="password"><b>Password</b></label>
+									<input class="form-control" id="password" th:field="*{pwd}" type="password" required="required" placeholder="Password"/>
+								</div>
+								<div th:class="${registerErrorPwd} ? 'form-group has-error' : form-group">
+		        				 	<label for="confirmPassword"><b>Re-enter Password</b></label>
+									<input class="form-control" id="confirmPassword" name="confirmPassword" type="password" required="required" placeholder="Re-enter Password"/>
+								</div>
+								<div class="form-group">
+									<button type="submit" class="btn pull-right">Register</button>
+									<div class="clearfix"></div>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+			<script type="text/javascript">
+				$('#register-form').bootstrapValidator({
+			        message: 'This value is not valid',
+			        feedbackIcons: {
+			            valid: 'glyphicon glyphicon-ok',
+			            invalid: 'glyphicon glyphicon-remove',
+			            validating: 'glyphicon glyphicon-refresh'
+			        },
+			        fields: {
+			        	accountName : {
+							message : 'The account name is not valid',
+							validators : {
+								notEmpty : {
+									message : 'The account name is required and can\'t be empty',
+								},
+							},
+							stringLength : {
+								min : 3,
+								max : 30,
+								message : 'The account name must be more than 3 characters long',
+							}
+						},
+						fullName : {
+							message : 'The full name is not valid',
+							validators : {
+								notEmpty : {
+									message : 'The full name is required and can\'t be empty',
+								},
+							},
+						},
+						email : {
+							validators : {
+								notEmpty : {
+									message : 'The email address is required and can\'t be empty',
+								},
+								emailAddress : {
+									message : 'The input is not a valid email address',
+								},
+							},
+						},
+			            pwd: {
+			            	validators : {
+								notEmpty : {
+									message : 'The password is required and can\'t be empty',
+								},
+								stringLength : {
+									min : 6,
+									max : 30,
+									message : 'The password must be more than 6 and less than 30 characters long',
+								},
+								identical: {
+			                        field: 'confirmPassword',
+			                        message: 'The password and its confirm are not the same'
+			                    },
+			                    different: {
+			                        field: 'accountName',
+			                        message: 'The password cannot be the same as account name'
+			                    }
+			                }
+			            },
+			            confirmPassword: {
+			                validators: {
+			                    notEmpty: {
+			                        message: 'The confirm password is required and cannot be empty'
+			                    },
+			                    identical: {
+			                        field: 'pwd',
+			                        message: 'The password and its confirm are not the same'
+			                    },
+			                    different: {
+			                        field: 'accountName',
+			                        message: 'The password cannot be the same as account name'
+			                    }
+			                }
+			            }
+			        }
+				});
+			</script>
+		</div>
+	</body>
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org" lang="en"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+	<head>
+	</head>
+	<body>
+		<div class="footer" th:fragment="footer">
+			<div class="container">
+		    	<div class="row">
+		    		<div class="col-footer col-md-4 col-xs-6">
+		    			<h3>Categories</h3>
+		    			<ul class="no-list-style footer-navigate-section">
+							<li th:each="categorySub : ${listCateSub}">
+								<a th:href="${categorySub.cateSubPath}" th:text="${categorySub.cateSubName}">CategorySub name</a>
+							</li>
+						</ul>
+		    		</div>
+		    		<div class="col-footer col-md-5 col-xs-6">
+		    			<h3>Contacts</h3>
+		    			<p class="contact-us-details">
+	        				<b>Address:</b> K2/35 Ha Khe Street, Thanh Khe, Da Nang<br/>
+	        				<b>Phone:</b> +84 905 68.55.91<br/>
+	        				<b>Email:</b> <a href="mailto:vuvanhai.dev@gmail.com">vuvanhai.dev@gmail.com</a>
+	        			</p>
+		    		</div>
+		    		<div class="col-footer col-md-3 col-xs-6">
+		    			<h3>Stay Connected</h3>
+		    			<ul class="footer-stay-connected no-list-style">
+		    				<li><a href="#" class="facebook"></a></li>
+		    				<li><a href="#" class="twitter"></a></li>
+		    				<li><a href="#" class="googleplus"></a></li>
+		    			</ul>
+		    		</div>
+		    	</div>
+		    	<div class="row">
+		    		<div class="col-md-12">
+		    			<div class="footer-copyright">&copy; 2015 Hai Vu. All rights reserved.</div>
+		    		</div>
+		    	</div>
+		    </div>
+		</div>
+	</body>
+</html>

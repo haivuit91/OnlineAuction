@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+	<head>
+	</head>
+	<body onload='document.f.j_username.focus();'>
+		<div class="section" th:fragment="content">
+	    	<div class="container">
+				<div class="row">
+					<div class="col-sm-5 login-center">
+						<div class="alert alert-danger alert-dismissible fade in" role="alert" th:if="${param.error}">
+							<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+						  		<span aria-hidden="true">&times;</span>
+							</button>
+							Email or password incorrect!
+						</div>
+						<div class="alert alert-success alert-dismissible fade in" role="alert" th:if="${param.logout}">
+							<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+						  		<span aria-hidden="true">&times;</span>
+							</button>
+							You have been logged out.
+						</div>
+						<div class="basic-login">
+							<form name='f' method='POST'>
+								<div class="form-group">
+		        				 	<label for="login-username"><i class="fa fa-user"></i> <b>Email Address</b></label>
+									<input class="form-control" id="login-username" type="text" name="username" placeholder="Email Address"/>
+								</div>
+								<div class="form-group">
+		        				 	<label for="login-password"><i class="fa fa-lock"></i> <b>Password</b></label>
+									<input class="form-control" id="login-password" type="password" name="password" placeholder="Password"/>
+								</div>
+								<div class="form-group">
+									<label class="checkbox">
+										<input type="checkbox" name="remember-me" /> Remember me
+									</label>
+									<a href="#" class="forgot-password">Forgot password?</a>
+									<button type="submit" class="btn pull-right">Login</button>
+									<div class="clearfix"></div>
+								</div>
+								<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+							</form>
+						</div>
+						<div class="social-login">
+							<div class="clearfix"></div>
+							<div class="not-member">
+								<p>Not a member? <a th:href="@{/account/register}">Register here</a></p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

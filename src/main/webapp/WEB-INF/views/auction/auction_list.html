@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org" lang="en"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+	<head>
+	</head>
+	<body>
+		<div class="eshop-section section" th:fragment="content">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-3 col-sm-6 count-down" th:each="item : ${listItem.content}">
+						<div class="shop-item">
+							<div class="ribbon-wrapper" style="display: none;">
+								<div class="price-ribbon ribbon-red">Ended</div>
+							</div>
+							<div class="shop-item-image">
+								<a th:href="@{'/auctions/item/' + ${item.id}}"><img th:src="@{'/image/' + ${item.itemThumbnail}}" th:alt="${item.itemTitle}" /></a>
+							</div>
+							<div class="title">
+								<h3><a th:href="@{'/auctions/item/' + ${item.id}}" th:text="${item.itemTitle}">Title</a></h3>
+							</div>
+							<div class="bid-number">
+								Bid: <span>1</span>
+							</div>
+							<div class="count-down">
+								<i class="glyphicon glyphicon-time"></i> <span class="time-count" th:attr="data-countdown = ${#calendars.format(item.bidEndDate,'yyyy/MM/dd HH:mm:ss')}" >Count down</span>
+							</div>
+							<div class="price">
+								<span class="price-was">$<span data-toggle="tooltip" data-placement="bottom" title="haivuit91@gmail.com" th:text="${item.currentBid}">Current bid</span></span>
+								$<span class="price-bid" th:attr="data-price = ${item.currentBid + item.bidIncremenent}" th:text="${item.currentBid + item.bidIncremenent}">Price</span>
+							</div>
+							<div class="actions">
+								<button class="btn btn-small btn-bid">Bid</button>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="pagination-wrapper">
+					<ul class="pagination pagination-lg">
+						<li th:if="${currentIndex == 1}" class="disabled">
+							<span aria-hidden="true">&laquo;</span>
+						</li>
+						<li th:unless="${currentIndex == 1}">
+							<a th:href="@{/auctions/all(page=${currentIndex - 1})}" aria-label="Previous">
+								<span aria-hidden="true">&laquo;</span>
+							</a>
+						</li>
+						<li th:each="i : ${#numbers.sequence(beginIndex, endIndex)}" th:class="${currentIndex == i} ? active">
+							<span th:if="${currentIndex == i}" th:text="${i}"></span>
+							<a th:href="@{/auctions/all(page=${i})}" th:unless="${currentIndex == i}" th:text="${i}"></a>
+						</li>
+						<li th:if="${currentIndex == listItem.totalPages}" class="disabled">
+							<span aria-hidden="true">&raquo;</span>
+						</li>
+						<li th:unless="${currentIndex == listItem.totalPages}">
+							<a th:href="@{/auctions/all(page=${currentIndex + 1})}" aria-label="Next">
+								<span aria-hidden="true">&raquo;</span>
+							</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<script type="text/javascript">
+				$(function () {
+					$('[data-toggle="tooltip"]').tooltip()
+				})
+				$('.count-down').each(function() {
+					var $this = $(this);
+					var time = $this.find('.time-count').data('countdown');
+					$this.countdown(time, function(event) {
+						$this.find('.time-count').html(event.strftime('%D days %H:%M:%S'));
+					}).on('finish.countdown', function() {
+						$this.find('.ribbon-wrapper').show();
+						$this.find('.btn-bid').addClass('disabled');
+						$this.find('.time-count').html('Ended');
+						$this.hide();
+					});
+					$this.find('.btn-bid').click(function() {
+						checkLogin($this);
+					});
+				});
+				function checkLogin($this) {
+					var data = $this.find('.price-bid').data('price');
+					$.ajax({
+						type: "POST",
+					    url: "check",
+						success : function(response) {
+							if(response == true) {
+								$.confirm({
+							        text: "You want to bid with price $" + data,
+							        confirm: function(button) {
+							        	acceptBid(data);
+							        },
+							        cancel: function(button) {
+							            return false;
+							        },
+							        cancelButton: "No"
+							    });
+							} else {
+								$.confirm({
+							        text: "Please login before to bid.",
+							        confirm: function(button) {
+							        	window.location.href = "../account/login";
+							        },
+							        cancel: function(button) {
+							            return false;
+							        },
+							        confirmButton: "Login"
+							    });
+							}
+						},
+						error : function(e) {
+							alert('Error: ' + e);
+						}
+					});
+				};
+				function acceptBid(data) {
+					alert(data);
+//	 				$.ajax({
+//	 					type: "POST",
+//	 				    contentType : 'application/json; charset=utf-8',
+//	 				    dataType : 'json',
+//	 				    url: "getListUserJson",
+//	 				    data: JSON.stringify(dataJson),
+//	 					success : function(response) {
+//	 						alert("Ok")
+//	 					},
+//	 					error : function(e) {
+//	 						alert('Error: ' + e);
+//	 					}
+//	 				});
+				};
+			</script>
+		</div>
+	</body>
+</html>
