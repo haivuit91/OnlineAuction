@@ -32,14 +32,17 @@ public class Bid extends Model {
 		super();
 	}
 
-	public Bid(Date timeBid, double maximumBid, boolean status, Item item,
-			Account account) {
+	public Bid(Date timeBid, double maximumBid, boolean status, Item item, Account account) {
 		super();
 		this.timeBid = timeBid;
 		this.maximumBid = maximumBid;
 		this.status = status;
 		this.item = item;
 		this.account = account;
+	}
+	
+	public Bid(double maximumBid, Item item, Account account) {
+		this(new Date(), maximumBid, true, item, account);
 	}
 
 	public Date getTimeBid() {

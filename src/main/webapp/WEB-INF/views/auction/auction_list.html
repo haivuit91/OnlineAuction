@@ -22,13 +22,13 @@
 								<h3><a th:href="@{'/auctions/item/' + ${item.id}}" th:text="${item.itemTitle}">Title</a></h3>
 							</div>
 							<div class="bid-number">
-								Bid: <span>1</span>
+								Bid: <span class="total-bid" th:attr="data-item-id = ${item.id}">Total bid</span>
 							</div>
 							<div class="count-down">
 								<i class="glyphicon glyphicon-time"></i> <span class="time-count" th:attr="data-countdown = ${#calendars.format(item.bidEndDate,'yyyy/MM/dd HH:mm:ss')}" >Count down</span>
 							</div>
 							<div class="price">
-								<span class="price-was">$<span data-toggle="tooltip" data-placement="bottom" title="haivuit91@gmail.com" th:text="${item.currentBid}">Current bid</span></span>
+								<span class="price-was">$<span class="curent-member" data-toggle="tooltip" data-placement="bottom" title="" th:text="${item.currentBid}">Current bid</span></span>
 								$<span class="price-bid" th:attr="data-price = ${item.currentBid + item.bidIncremenent}" th:text="${item.currentBid + item.bidIncremenent}">Price</span>
 							</div>
 							<div class="actions">
@@ -39,23 +39,23 @@
 				</div>
 				<div class="pagination-wrapper">
 					<ul class="pagination pagination-lg">
-						<li th:if="${currentIndex == 1}" class="disabled">
+						<li th:if="${(listItem.number + 1) == 1}" class="disabled">
 							<span aria-hidden="true">&laquo;</span>
 						</li>
-						<li th:unless="${currentIndex == 1}">
-							<a th:href="@{/auctions/all(page=${currentIndex - 1})}" aria-label="Previous">
+						<li th:unless="${(listItem.number + 1) == 1}">
+							<a th:href="@{/auctions/all(page=${listItem.number})}" aria-label="Previous">
 								<span aria-hidden="true">&laquo;</span>
 							</a>
 						</li>
-						<li th:each="i : ${#numbers.sequence(beginIndex, endIndex)}" th:class="${currentIndex == i} ? active">
-							<span th:if="${currentIndex == i}" th:text="${i}"></span>
-							<a th:href="@{/auctions/all(page=${i})}" th:unless="${currentIndex == i}" th:text="${i}"></a>
+						<li th:each="i : ${#numbers.sequence(1, listItem.totalPages)}" th:class="${(listItem.number + 1) == i} ? active">
+							<span th:if="${(listItem.number + 1) == i}" th:text="${i}"></span>
+							<a th:href="@{/auctions/all(page=${i})}" th:unless="${(listItem.number + 1) == i}" th:text="${i}"></a>
 						</li>
-						<li th:if="${currentIndex == listItem.totalPages}" class="disabled">
+						<li th:if="${(listItem.number + 1) == listItem.totalPages}" class="disabled">
 							<span aria-hidden="true">&raquo;</span>
 						</li>
-						<li th:unless="${currentIndex == listItem.totalPages}">
-							<a th:href="@{/auctions/all(page=${currentIndex + 1})}" aria-label="Next">
+						<li th:unless="${(listItem.number + 1) == listItem.totalPages}">
+							<a th:href="@{/auctions/all(page=${(listItem.number + 1) + 1})}" aria-label="Next">
 								<span aria-hidden="true">&raquo;</span>
 							</a>
 						</li>
@@ -65,9 +65,10 @@
 			<script type="text/javascript">
 				$(function () {
 					$('[data-toggle="tooltip"]').tooltip()
-				})
+				});
 				$('.count-down').each(function() {
 					var $this = $(this);
+					getListBid($this);
 					var time = $this.find('.time-count').data('countdown');
 					$this.countdown(time, function(event) {
 						$this.find('.time-count').html(event.strftime('%D days %H:%M:%S'));
@@ -75,7 +76,6 @@
 						$this.find('.ribbon-wrapper').show();
 						$this.find('.btn-bid').addClass('disabled');
 						$this.find('.time-count').html('Ended');
-						$this.hide();
 					});
 					$this.find('.btn-bid').click(function() {
 						checkLogin($this);
@@ -91,7 +91,7 @@
 								$.confirm({
 							        text: "You want to bid with price $" + data,
 							        confirm: function(button) {
-							        	acceptBid(data);
+							        	acceptBid($this);
 							        },
 							        cancel: function(button) {
 							            return false;
@@ -116,21 +116,47 @@
 						}
 					});
 				};
-				function acceptBid(data) {
-					alert(data);
-//	 				$.ajax({
-//	 					type: "POST",
-//	 				    contentType : 'application/json; charset=utf-8',
-//	 				    dataType : 'json',
-//	 				    url: "getListUserJson",
-//	 				    data: JSON.stringify(dataJson),
-//	 					success : function(response) {
-//	 						alert("Ok")
-//	 					},
-//	 					error : function(e) {
-//	 						alert('Error: ' + e);
-//	 					}
-//	 				});
+				function acceptBid($this) {
+					var price = $this.find('.price-bid').data('price');
+					var itemId = $this.find('.total-bid').data('item-id');
+					$.ajax({
+						type: "POST",
+						url: "../bid/accept-bid",
+						data: {price : price, itemId : itemId},
+						success: function(response) {
+							$.confirm({
+						        text: response,
+						        cancel: function(button) {
+						            return false;
+						        },
+						        cancelButton: "Ok",
+						        confirmButtonClass: "btn-warning",
+						    });
+						},
+						error: function(e) {
+							alert("Error: " + e);
+						}
+					});
+				};
+				function getListBid($this) {
+					var data = $this.find('.total-bid').data('item-id');
+					$.ajax({
+						type: "POST",
+						url: "../bid/list-bid",
+						data: {id : data},
+						success: function(response) {
+							var member = '';
+							var i = 0;
+							$.each(response, function(key, value) {
+								if(value.maximumBid > i) {
+									member = value.account.email;
+									i = value.maximumBid;
+								}
+							});
+							$this.find("span.total-bid").html(response.length);
+							$this.find('.curent-member').prop('title', member);
+						}
+					});
 				};
 			</script>
 		</div>

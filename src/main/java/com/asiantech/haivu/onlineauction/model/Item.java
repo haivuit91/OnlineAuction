@@ -99,8 +99,11 @@ public class Item extends Model {
 	 * @param currentBid
 	 *            Update Item
 	 */
-	public Item(double currentBid) {
-		this.currentBid = currentBid;
+	public Item(Item item, double currentBid) {
+		this(item.itemTitle, item.getItemDesciption(), item.getItemThumbnail(),
+				item.getMinimumBid(), item.getBidIncremenent(), currentBid,
+				item.getBidStartDate(), item.getBidEndDate(), item
+						.isBidStatus(), item.account, item.categorySub);
 	}
 
 	public String getItemTitle() {

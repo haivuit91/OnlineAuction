@@ -28,15 +28,15 @@ public class ItemServiceImpl implements ItemService {
 	}
 
 	@Override
-	public Page<Item> findItemByBidStatusAndBidStartDateAndBidEndDate(boolean bidStatus, Pageable pageable) {
+	public Page<Item> findItemByBidStatusAndBidStartDateAndBidEndDate(Pageable pageable) {
 		Pageable page = PageAbleCommon.customePageable(pageable);
-		return itemRepository.findByBidStatusAndBidStartDateBeforeAndBidEndDateAfter(bidStatus, new Date(), new Date(), page);
+		return itemRepository.findByBidStatusAndBidStartDateBeforeAndBidEndDateAfter(true, new Date(), new Date(), page);
 	}
 
 	@Override
-	public Page<Item> findItemByCategorySub(CategorySub categorySub,
-			Pageable pageable) {
-		return itemRepository.findByCategorySub(categorySub, pageable);
+	public Page<Item> findItemByCategorySub(CategorySub categorySub, Pageable pageable) {
+		Pageable page = PageAbleCommon.customePageable(pageable);
+		return itemRepository.findByCategorySub(categorySub, page);
 	}
 
 	@Override
@@ -45,8 +45,20 @@ public class ItemServiceImpl implements ItemService {
 	}
 
 	@Override
-	public Item saveItem(Item item) {
+	public Item addNewItem(Item item) {
 		return itemRepository.save(item);
+	}
+
+	@Override
+	public Item updateItem(Item item) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Item updateCurrentBidItem(Item item, double currentBid) {
+		Item uItem = new Item(item, currentBid);
+		return itemRepository.save(uItem);
 	}
 
 	@Override

@@ -12,7 +12,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.asiantech.haivu.onlineauction.service.ImageService;
 
@@ -23,12 +22,12 @@ public class MainController {
 	private ImageService imageSv;
 
 	// TODO default method is GET you can remove method attribute
-	@RequestMapping(value = "/", method = RequestMethod.GET)
+	@RequestMapping(value = "/")
 	public String goHomePage(ModelMap model) {
 		return "redirect:/auctions/all";
 	}
 
-	@RequestMapping(value = "/auction", method = RequestMethod.GET)
+	@RequestMapping(value = "/auction")
 	public String goAuctionPage(ModelMap model) {
 		return "redirect:/auctions/all";
 	}

@@ -13,13 +13,17 @@ public interface ItemService {
 
 	Page<Item> findItemByAccountAndBidStatus(Account account, boolean status, Pageable pageable);
 
-	Page<Item> findItemByBidStatusAndBidStartDateAndBidEndDate(boolean status, Pageable pageable);
+	Page<Item> findItemByBidStatusAndBidStartDateAndBidEndDate(Pageable pageable);
 
 	Page<Item> findItemByCategorySub(CategorySub categorySub, Pageable pageable);
 
 	Item findItemById(long id);
 
-	Item saveItem(Item item);
+	Item addNewItem(Item item);
+	
+	Item updateItem(Item item);
+	
+	Item updateCurrentBidItem(Item item, double currentBid);
 
 	Item deleteItem(long id);
 

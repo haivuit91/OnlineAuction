@@ -113,7 +113,7 @@ public class ItemController {
 				imageName, item.getMinimumBid(), item.getBidIncremenent(),
 				item.getBidStartDate(), item.getBidEndDate(), account,
 				null);
-		itemSv.saveItem(itemTmp);
+		//itemSv.saveItem(itemTmp);
 		model.put("msg", "Add new Item successfully");
 		return "redirect:/item/list?success";
 	}
