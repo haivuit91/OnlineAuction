@@ -22,5 +22,7 @@ public interface AccountService extends UserDetailsService {
 	Account findAccountByEmailAndStatus(String email, Status status);
 
 	Account saveAccount(Account account);
+	
+	boolean updateTrustAccount(double trust, Account account);
 
 }

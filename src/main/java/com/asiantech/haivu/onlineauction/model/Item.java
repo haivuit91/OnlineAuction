@@ -4,6 +4,9 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
@@ -12,7 +15,12 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
 @Table(name = "item")
-public class Item extends Model {
+public class Item {
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "id", length = 1000)
+	private long id;
 
 	@Column(name = "item_title", length = 100)
 	@NotNull(message = "The item title is required and can't be empty")
@@ -44,6 +52,9 @@ public class Item extends Model {
 	@NotNull
 	@DateTimeFormat(pattern = "dd/MM/yyyy HH:mm")
 	private Date bidEndDate;
+	
+	@Column(name = "bid_counts")
+	private int bidCounts;
 
 	@Column(name = "bid_status")
 	private boolean bidStatus;
@@ -58,11 +69,12 @@ public class Item extends Model {
 		super();
 	}
 
-	public Item(String itemTitle, String itemDesciption, String itemThumbnail,
-			double minimumBid, double bidIncremenent, double currentBid,
-			Date bidStartDate, Date bidEndDate, boolean bidStatus,
-			Account account, CategorySub categorySub) {
+	public Item(long id, String itemTitle, String itemDesciption,
+			String itemThumbnail, double minimumBid, double bidIncremenent,
+			double currentBid, Date bidStartDate, Date bidEndDate, int bidCounts,
+			boolean bidStatus, Account account, CategorySub categorySub) {
 		super();
+		this.id = id;
 		this.itemTitle = itemTitle;
 		this.itemDesciption = itemDesciption;
 		this.itemThumbnail = itemThumbnail;
@@ -71,6 +83,7 @@ public class Item extends Model {
 		this.currentBid = currentBid;
 		this.bidStartDate = bidStartDate;
 		this.bidEndDate = bidEndDate;
+		this.bidCounts = bidCounts;
 		this.bidStatus = bidStatus;
 		this.account = account;
 		this.categorySub = categorySub;
@@ -85,25 +98,37 @@ public class Item extends Model {
 	 * @param bidStartDate
 	 * @param bidEndDate
 	 * @param account
-	 *            Create new item
+	 * 
+	 * Create new item
 	 */
 	public Item(String itemTitle, String itemDesciption, String itemThumbnail,
 			double minimumBid, double bidIncremenent, Date bidStartDate,
 			Date bidEndDate, Account account, CategorySub categorySub) {
-		this(itemTitle, itemDesciption, itemThumbnail, minimumBid,
-				bidIncremenent, minimumBid, bidStartDate, bidEndDate, true,
+		this(0, itemTitle, itemDesciption, itemThumbnail, minimumBid,
+				bidIncremenent, minimumBid, bidStartDate, bidEndDate, 0, true,
 				account, categorySub);
 	}
 
 	/**
+	 * @param item
 	 * @param currentBid
-	 *            Update Item
+	 * 
+	 * Update current bid Item
 	 */
 	public Item(Item item, double currentBid) {
-		this(item.itemTitle, item.getItemDesciption(), item.getItemThumbnail(),
-				item.getMinimumBid(), item.getBidIncremenent(), currentBid,
-				item.getBidStartDate(), item.getBidEndDate(), item
-						.isBidStatus(), item.account, item.categorySub);
+		this(item.getId(), item.itemTitle, item.getItemDesciption(), item
+				.getItemThumbnail(), item.getMinimumBid(), item
+				.getBidIncremenent(), currentBid, item.getBidStartDate(), item
+				.getBidEndDate(), item.getBidCounts(), item.isBidStatus(), item.account,
+				item.categorySub);
+	}
+
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
 	}
 
 	public String getItemTitle() {
@@ -168,6 +193,14 @@ public class Item extends Model {
 
 	public void setBidEndDate(Date bidEndDate) {
 		this.bidEndDate = bidEndDate;
+	}
+
+	public int getBidCounts() {
+		return bidCounts;
+	}
+
+	public void setBidCounts(int bidCounts) {
+		this.bidCounts = bidCounts;
 	}
 
 	public boolean isBidStatus() {

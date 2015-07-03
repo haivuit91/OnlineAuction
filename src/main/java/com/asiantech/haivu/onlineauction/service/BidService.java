@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.asiantech.haivu.onlineauction.model.Account;
 import com.asiantech.haivu.onlineauction.model.Bid;
+import com.asiantech.haivu.onlineauction.model.Item;
 
 public interface BidService {
 
@@ -11,10 +12,12 @@ public interface BidService {
 
 	List<Bid> findAllBid();
 
-	List<Bid> findAllBidByItemIdAndStatusTrue(Long itemId);
+	List<Bid> findAllBidByItemIdAndStatusTrue(long itemId);
 
 	List<Bid> findAllBidByAccount(Account account);
 	
-	boolean acceptBid(double maximumBid, Long itemId, String email);
+	Bid findBidByAccountAndItem(Account account, Item item);
+	
+	boolean acceptBid(double maximumBid, long itemId, String email);
 
 }

@@ -34,13 +34,13 @@ public class BidController {
 	
 	@RequestMapping(value = "accept-bid", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
-	public String acceptBid(@RequestParam("price") double price, @RequestParam("itemId") Long itemId) {
-		String msg = "False";
+	public boolean acceptBid(@RequestParam("price") double price, @RequestParam("itemId") long itemId) {
+		boolean check = false;
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		if (bidSv.acceptBid(price, itemId, auth.getName())) {
-			msg = "True";
+			check = true;
 		}
-		return "jjjjjjjjjjjjjjjjj";
+		return check;
 	}
 
 }

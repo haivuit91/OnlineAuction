@@ -23,7 +23,7 @@ public class BidServiceImpl implements BidService {
 
 	@Autowired
 	private ItemService itemSv;
-	
+
 	@Autowired
 	private AccountService accountSv;
 
@@ -33,7 +33,7 @@ public class BidServiceImpl implements BidService {
 	}
 
 	@Override
-	public List<Bid> findAllBidByItemIdAndStatusTrue(Long itemId) {
+	public List<Bid> findAllBidByItemIdAndStatusTrue(long itemId) {
 		Item item = itemSv.findItemById(itemId);
 		return bidRepository.findByItemAndStatusOrderByMaximumBidAsc(item, true);
 	}
@@ -44,23 +44,37 @@ public class BidServiceImpl implements BidService {
 	}
 
 	@Override
-	public boolean acceptBid(double maximumBid, Long itemId, String email) {
+	public Bid findBidByAccountAndItem(Account account, Item item) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean acceptBid(double maximumBid, long itemId, String email) {
 		boolean check = false;
 		Item item = itemSv.findItemById(itemId);
 		Account account = accountSv.findAccountByEmail(email);
-		if(item != null && account != null) {
-			if(checkItemBidByAccount(item, account)) {
-				Bid bid = new Bid(maximumBid, item, account);
-				check = (bidRepository.save(bid) != null) ? true : false;
-				itemSv.updateCurrentBidItem(item, maximumBid);
+		if (item != null && account != null) {
+			if (checkItemBidByAccount(item, account)) {
+				Bid b = bidRepository.findByAccountAndItem(account, item);
+				if(b != null) {
+					int count = b.getCount() + 1;
+					Bid bid = new Bid(b.getId(), maximumBid, count, item, account);
+					check = (bidRepository.save(bid) != null) ? true : false;
+					itemSv.updateCurrentBidItem(item, maximumBid);
+				} else {
+					Bid bid = new Bid(0, maximumBid, 1, item, account);
+					check = (bidRepository.save(bid) != null) ? true : false;
+					itemSv.updateCurrentBidItem(item, maximumBid);
+				}
 			}
 		}
 		return check;
 	}
-	
+
 	private boolean checkItemBidByAccount(Item item, Account account) {
 		boolean check = false;
-		if(item.getAccount() != account) {
+		if (!item.getAccount().getEmail().equals(account.getEmail())) {
 			check = true;
 		}
 		return check;

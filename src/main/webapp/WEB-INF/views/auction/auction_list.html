@@ -22,13 +22,13 @@
 								<h3><a th:href="@{'/auctions/item/' + ${item.id}}" th:text="${item.itemTitle}">Title</a></h3>
 							</div>
 							<div class="bid-number">
-								Bid: <span class="total-bid" th:attr="data-item-id = ${item.id}">Total bid</span>
+								Bid: <span class="total-bid" th:attr="data-item-id = ${item.id}" th:text="${item.bidCounts}">Total bid</span>
 							</div>
 							<div class="count-down">
 								<i class="glyphicon glyphicon-time"></i> <span class="time-count" th:attr="data-countdown = ${#calendars.format(item.bidEndDate,'yyyy/MM/dd HH:mm:ss')}" >Count down</span>
 							</div>
 							<div class="price">
-								<span class="price-was">$<span class="curent-member" data-toggle="tooltip" data-placement="bottom" title="" th:text="${item.currentBid}">Current bid</span></span>
+								<span class="price-was">$<span id="curent-member" data-toggle="tooltip" data-placement="bottom" title="" th:text="${item.currentBid}">Current bid</span></span>
 								$<span class="price-bid" th:attr="data-price = ${item.currentBid + item.bidIncremenent}" th:text="${item.currentBid + item.bidIncremenent}">Price</span>
 							</div>
 							<div class="actions">
@@ -64,11 +64,10 @@
 			</div>
 			<script type="text/javascript">
 				$(function () {
-					$('[data-toggle="tooltip"]').tooltip()
+					$('[data-toggle="tooltip"]').tooltip();
 				});
 				$('.count-down').each(function() {
 					var $this = $(this);
-					getListBid($this);
 					var time = $this.find('.time-count').data('countdown');
 					$this.countdown(time, function(event) {
 						$this.find('.time-count').html(event.strftime('%D days %H:%M:%S'));
@@ -80,18 +79,19 @@
 					$this.find('.btn-bid').click(function() {
 						checkLogin($this);
 					});
+					getListBid($this);
 				});
 				function checkLogin($this) {
-					var data = $this.find('.price-bid').data('price');
+					var price = $this.find('.price-bid').data('price');
 					$.ajax({
 						type: "POST",
-					    url: "check",
+					    url: "../check",
 						success : function(response) {
 							if(response == true) {
 								$.confirm({
-							        text: "You want to bid with price $" + data,
+							        text: "You want to bid with price $" + price,
 							        confirm: function(button) {
-							        	acceptBid($this);
+							        	acceptBid($this, price);
 							        },
 							        cancel: function(button) {
 							            return false;
@@ -116,22 +116,18 @@
 						}
 					});
 				};
-				function acceptBid($this) {
-					var price = $this.find('.price-bid').data('price');
+				function acceptBid($this, price) {
 					var itemId = $this.find('.total-bid').data('item-id');
 					$.ajax({
 						type: "POST",
 						url: "../bid/accept-bid",
 						data: {price : price, itemId : itemId},
 						success: function(response) {
-							$.confirm({
-						        text: response,
-						        cancel: function(button) {
-						            return false;
-						        },
-						        cancelButton: "Ok",
-						        confirmButtonClass: "btn-warning",
-						    });
+							var msg = 'You bid fail.';
+							if(response == true) {
+								msg = 'You bid successful';
+							};
+							alert(msg);
 						},
 						error: function(e) {
 							alert("Error: " + e);
@@ -151,10 +147,9 @@
 								if(value.maximumBid > i) {
 									member = value.account.email;
 									i = value.maximumBid;
-								}
+								};
 							});
-							$this.find("span.total-bid").html(response.length);
-							$this.find('.curent-member').prop('title', member);
+							$this.find('span#curent-member').prop('title', member);
 						}
 					});
 				};

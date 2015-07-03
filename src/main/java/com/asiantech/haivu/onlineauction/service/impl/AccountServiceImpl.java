@@ -88,4 +88,16 @@ public class AccountServiceImpl implements AccountService {
 		return accRepository.findByEmailAndStatus(email, status);
 	}
 
+	@Override
+	@Transactional
+	public boolean updateTrustAccount(double trust, Account account) {
+		Account acc = new Account(account.getId(), account.getAccountName(),
+				account.getPwd(), account.getFullName(),
+				account.getDateOfBirth(), account.getSex(), account.getEmail(),
+				account.getStatus(), account.getRole(), trust,
+				account.getVerification());
+		boolean check = accRepository.save(acc) != null ? true : false;
+		return check;
+	}
+
 }

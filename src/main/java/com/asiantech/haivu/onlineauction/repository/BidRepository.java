@@ -13,5 +13,7 @@ public interface BidRepository extends JpaRepository<Bid, Long> {
 	List<Bid> findByItemAndStatusOrderByMaximumBidAsc(Item item, boolean status);
 
 	List<Bid> findByAccountOrderByMaximumBidDesc(Account account);
+	
+	Bid findByAccountAndItem(Account account, Item item);
 
 }

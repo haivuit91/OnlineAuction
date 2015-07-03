@@ -6,6 +6,9 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -20,7 +23,12 @@ import com.asiantech.haivu.onlineauction.enums.Status;
 
 @Entity
 @Table(name = "account")
-public class Account extends Model {
+public class Account {
+	
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "id", length = 1000)
+	private long id;
 
 	@Column(name = "account_name", length = 255)
 	@NotNull(message = "The account name is required and can't be empty")
@@ -66,10 +74,11 @@ public class Account extends Model {
 		super();
 	}
 
-	public Account(String accountName, String pwd, String fullName,
+	public Account(long id, String accountName, String pwd, String fullName,
 			Date dateOfBirth, int sex, String email, Status status, Role role,
 			double trust, String verification) {
 		super();
+		this.id = id;
 		this.accountName = accountName;
 		this.pwd = pwd;
 		this.fullName = fullName;
@@ -92,8 +101,16 @@ public class Account extends Model {
 	 */
 	public Account(String accountName, String pwd, String fullName,
 			String email, String verification) {
-		this(accountName, pwd, fullName, null, 0, email, Status.ENABLE,
+		this(0, accountName, pwd, fullName, null, 0, email, Status.ENABLE,
 				Role.ROLE_USER, 0, verification);
+	}
+	
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
 	}
 
 	public String getAccountName() {

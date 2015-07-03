@@ -10,7 +10,9 @@ public interface CategorySubService {
 
 	List<CategorySub> findAllCategorySub();
 
-	CategorySub findCategorySubbyId(long id);
+	CategorySub findCategorySubById(long id);
+	
+	CategorySub findCategorySubByPath(String cateSubPath);
 
 	CategorySub saveCategorySub(CategorySub categorySub);
 

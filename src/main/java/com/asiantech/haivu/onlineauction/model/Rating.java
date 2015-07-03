@@ -2,13 +2,21 @@ package com.asiantech.haivu.onlineauction.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "rating")
-public class Rating extends Model {
+public class Rating {
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "id", length = 1000)
+	private long id;
 
 	@Column(name = "point", length = 100)
 	@NotNull
@@ -25,11 +33,30 @@ public class Rating extends Model {
 		super();
 	}
 
-	public Rating(double point, long accountRating, Account account) {
+	public Rating(long id, double point, long accountRating, Account account) {
 		super();
+		this.id = id;
 		this.point = point;
 		this.accountRating = accountRating;
 		this.account = account;
+	}
+	
+	/**
+	 * @param point
+	 * @param rating
+	 * 
+	 * Update rating
+	 */
+	public Rating(double point, Rating rating) {
+		this(rating.getId(), point, rating.getAccountRating(), rating.getAccount());
+	}
+
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
 	}
 
 	public double getPoint() {

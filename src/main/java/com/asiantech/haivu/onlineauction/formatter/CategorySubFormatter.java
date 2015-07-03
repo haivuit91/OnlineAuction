@@ -26,7 +26,7 @@ public class CategorySubFormatter implements Formatter<CategorySub> {
 	@Override
 	public CategorySub parse(String text, Locale locale) throws ParseException {
 		Integer categorySubId = Integer.valueOf(text);
-		return this.categorySubService.findCategorySubbyId(categorySubId);
+		return this.categorySubService.findCategorySubById(categorySubId);
 	}
 
 }

@@ -10,39 +10,75 @@
 		<div class="eshop-section section" th:fragment="content">
 			<div class="container">
 				<div class="row">
-					<div class="col-md-3 col-sm-6 count-down-end" th:each="i: ${#numbers.sequence(1, 10)}">
+					<div class="col-md-3 col-sm-6 count-down-end" th:each="item : ${listItem.content}">
 						<div class="shop-item">
 							<div class="ribbon-wrapper">
 								<div class="price-ribbon ribbon-red">Ended</div>
 							</div>
 							<div class="shop-item-image">
-								<a th:href="@{/auctions/detail}"><img th:src="@{/resources/img/product6.jpg}" alt="Camera" /></a>
+								<a class="item-id" th:attr="data-item-id = ${item.id}"  th:href="@{'/auctions/item/' + ${item.id}}"><img th:src="@{'/image/' + ${item.itemThumbnail}}" th:alt="${item.itemTitle}" /></a>
 							</div>
 							<div class="title">
-								<h3><a th:href="@{/auctions/detail}">Camera</a></h3>
+								<h3><a th:href="@{'/auctions/item/' + ${item.id}}" th:text="${item.itemTitle}">Title</a></h3>
 							</div>
 							<div class="bid-number">
-								Bid: <span>1</span>
+								Bid: <span class="total-bid" th:text="${item.bidCounts}">Total bid</span>
 							</div>
-							<div class="price" data-toggle="tooltip" data-placement="bottom" title="haivuit91@gmail.com">
-								$999.99
+							<div class="price">
+								$<span id="curent-member" data-toggle="tooltip" data-placement="bottom" title="" th:text="${item.currentBid}">Price</span>
 							</div>
 						</div>
 					</div>
 				</div>
-				<div class="pagination-wrapper ">
+				<div class="pagination-wrapper">
 					<ul class="pagination pagination-lg">
-						<li class="disabled"><a href="#"> &laquo;</a></li>
-						<li class="active"><a href="#">1</a></li>
-						<li><a href="#">2</a></li>
-						<li><a href="#">&raquo; </a></li>
+						<li th:if="${(listItem.number + 1) == 1}" class="disabled">
+							<span aria-hidden="true">&laquo;</span>
+						</li>
+						<li th:unless="${(listItem.number + 1) == 1}">
+							<a th:href="@{/auctions/finished(page=${listItem.number})}" aria-label="Previous">
+								<span aria-hidden="true">&laquo;</span>
+							</a>
+						</li>
+						<li th:each="i : ${#numbers.sequence(1, listItem.totalPages)}" th:class="${(listItem.number + 1) == i} ? active">
+							<span th:if="${(listItem.number + 1) == i}" th:text="${i}"></span>
+							<a th:href="@{/auctions/finished(page=${i})}" th:unless="${(listItem.number + 1) == i}" th:text="${i}"></a>
+						</li>
+						<li th:if="${(listItem.number + 1) == listItem.totalPages}" class="disabled">
+							<span aria-hidden="true">&raquo;</span>
+						</li>
+						<li th:unless="${(listItem.number + 1) == listItem.totalPages}">
+							<a th:href="@{/auctions/finished(page=${(listItem.number + 1) + 1})}" aria-label="Next">
+								<span aria-hidden="true">&raquo;</span>
+							</a>
+						</li>
 					</ul>
 				</div>
 			</div>
 			<script type="text/javascript">
 				$(function () {
-					$('[data-toggle="tooltip"]').tooltip()
-				})
+					$('[data-toggle="tooltip"]').tooltip();
+				});
+				$('.count-down-end').each(function() {
+					var $this = $(this);
+					var itemId = $this.find('.item-id').data('item-id');
+					$.ajax({
+						type: "POST",
+						url: "../bid/list-bid",
+						data: {id : itemId},
+						success: function(response) {
+							var member = '';
+							var i = 0;
+							$.each(response, function(key, value) {
+								if(value.maximumBid > i) {
+									member = value.account.email;
+									i = value.maximumBid;
+								};
+							});
+							$this.find('span#curent-member').prop('title', member);
+						}
+					});
+				});
 			</script>
 		</div>
 	</body>

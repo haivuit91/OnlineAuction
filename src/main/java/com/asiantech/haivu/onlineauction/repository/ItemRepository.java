@@ -12,13 +12,14 @@ import com.asiantech.haivu.onlineauction.model.Item;
 
 public interface ItemRepository extends JpaRepository<Item, Long> {
 
-	Page<Item> findByAccountAndBidStatus(Account account, boolean bidStatus,
-			Pageable pageable);
+	Page<Item> findByAccountAndBidStatus(Account account, boolean bidStatus, Pageable pageable);
 
-	Page<Item> findByBidStatusAndBidStartDateBeforeAndBidEndDateAfter(
-			boolean bidStatus, Date bidStartDate, Date bidEndDate,
-			Pageable pageable);
+	Page<Item> findByBidStatusAndBidStartDateBeforeAndBidEndDateAfter( boolean bidStatus, Date bidStartDate, 
+			Date bidEndDate, Pageable pageable);
+	
+	Page<Item> findByBidStatusAndBidEndDateBefore(boolean bidStatus, Date bidEndDate, Pageable pageable);
 
-	Page<Item> findByCategorySub(CategorySub categorySub, Pageable pageable);
-
+	Page<Item> findByCategorySubAndBidStartDateBeforeAndBidEndDateAfter(CategorySub categorySub, Date bidStartDate, 
+			Date bidEndDate, Pageable pageable);
+	
 }

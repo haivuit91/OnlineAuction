@@ -23,8 +23,13 @@ public class CategorySubServiceImpl implements CategorySubService {
 	}
 
 	@Override
-	public CategorySub findCategorySubbyId(long id) {
+	public CategorySub findCategorySubById(long id) {
 		return cateSubRepository.findOne(id);
+	}
+
+	@Override
+	public CategorySub findCategorySubByPath(String cateSubPath) {
+		return cateSubRepository.findByCateSubPath(cateSubPath);
 	}
 
 	@Override
