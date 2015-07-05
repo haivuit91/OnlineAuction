@@ -13,8 +13,8 @@
 					<div th:replace="layout/home_sidebar :: sidebar">Sidebar</div>
 					<div class="col-sm-10">
 						<div class="blog-post blog-single-post">
-							<h2>Add new Item</h2>
-							<form role="form" id="add-edit-item-form" th:object="${item}" th:action="@{/item/add-new-item}" enctype="multipart/form-data" th:method="post">
+							<h2 th:text="${breadcrumbs}">Action title</h2>
+							<form role="form" id="add-edit-item-form" th:object="${item}" th:action="@{/item/save-item}" enctype="multipart/form-data" th:method="post">
 								<div class="alert alert-danger alert-dismissible fade in" role="alert" th:if="${#fields.hasErrors('*')}">
 									<button type="button" class="close" data-dismiss="alert" aria-label="Close">
 								  		<span aria-hidden="true">&times;</span>
@@ -25,6 +25,7 @@
 								</div>
 								<div class="row">
 									<div class="col-sm-6">
+										<input type="hidden" th:field="*{id}" />
 										<div th:class="${#fields.hasErrors('itemTitle')} ? 'form-group has-error' : form-group">
 				        				 	<label for="itemTitle"><b>Item title</b></label>
 											<input class="form-control" id="itemTitle" th:field="*{itemTitle}" type="text" required="required" placeholder="Item title"/>
@@ -37,7 +38,12 @@
 											<label for="minimumBid"><b>Minimum bid</b></label>
 			        				 		<input class="form-control" id="minimumBid" th:field="*{minimumBid}" type="number" required="required" placeholder="Minimum bid"/>
 										</div>
-										
+										<div th:class="${#fields.hasErrors('categorySub')} ? 'form-group has-error' : form-group">
+											<label for="categorySub"><b>Category</b></label>
+			        				 		<select class="form-control" id="categorySub" th:field="*{categorySub}">
+  												<option th:each="cateSub : ${allCategorySub}" th:value="${cateSub.id}" th:text="${cateSub.cateSubName}">Category Name</option>
+											</select>
+										</div>
 									</div>
 									<div class="col-sm-6">
 										<div class="form-group">
@@ -51,6 +57,14 @@
 										<div th:class="${#fields.hasErrors('bidIncremenent')} ? 'form-group has-error' : form-group">
 											<label for="bidIncremenent"><b>Bid increment</b></label>
 			        				 		<input class="form-control" id="bidIncremenent" th:field="*{bidIncremenent}" type="number" required="required" placeholder="Bid increment"/>
+										</div>
+										<div th:class="${#fields.hasErrors('bidStatus')} ? 'form-group has-error' : form-group" th:if="${breadcrumbs} == 'Edit item'">
+											<label for="bidStatus"><b>Status</b></label>
+<!-- 			        				 		<input class="form-control" id="bidStatus" th:field="*{bidStatus}" type="checkbox" /> -->
+			        				 		<select class="form-control" id="bidStatus" th:field="*{bidStatus}">
+  												<option value="true" >Enable</option>
+  												<option value="false" >Disable</option>
+											</select>
 										</div>
 									</div>
 								</div>

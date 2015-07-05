@@ -176,9 +176,10 @@
 									url: "../../rating/rating",
 									data: {point : value, accountId : accountId},
 									success: function(response) {
-										var msg = 'You rating fail.';
-										if(response == true) {
-											msg = 'You rating successful';
+										var msg = 'You rating successful.';
+										if(response == false) {
+											msg = 'You rating fail.';
+											$('#rating').rating('reset');
 										};
 										alert(msg);
 									},

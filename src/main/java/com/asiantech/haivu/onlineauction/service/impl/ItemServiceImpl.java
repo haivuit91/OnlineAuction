@@ -9,14 +9,17 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.asiantech.haivu.onlineauction.common.PageAbleCommon;
 import com.asiantech.haivu.onlineauction.model.Account;
 import com.asiantech.haivu.onlineauction.model.CategorySub;
 import com.asiantech.haivu.onlineauction.model.Item;
 import com.asiantech.haivu.onlineauction.repository.ItemRepository;
+import com.asiantech.haivu.onlineauction.service.AccountService;
 import com.asiantech.haivu.onlineauction.service.CategorySubService;
 import com.asiantech.haivu.onlineauction.service.ItemService;
+import com.asiantech.haivu.onlineauction.util.HandleImage;
 
 @Service(ItemService.NAME)
 public class ItemServiceImpl implements ItemService {
@@ -26,10 +29,17 @@ public class ItemServiceImpl implements ItemService {
 	
 	@Autowired
 	private CategorySubService categorySubService;
+	
+	@Autowired
+	private AccountService accountService;
+	
+	@Autowired
+	private HandleImage handleImg;
 
 	@Override
-	public Page<Item> findItemByAccountAndBidStatus(Account account, boolean bidStatus, Pageable pageable) {
+	public Page<Item> findItemByAccountAndBidStatus(String email, boolean bidStatus, Pageable pageable) {
 		Pageable page = PageAbleCommon.customePageable(pageable);
+		Account account = accountService.findAccountByEmail(email);
 		return itemRepository.findByAccountAndBidStatus(account, bidStatus, page);
 	}
 
@@ -59,14 +69,28 @@ public class ItemServiceImpl implements ItemService {
 
 	@Override
 	@Transactional
-	public Item addNewItem(Item item) {
-		return itemRepository.save(item);
-	}
-
-	@Override
-	@Transactional
-	public Item updateItem(Item item) {
-		return itemRepository.save(item);
+	public Item saveItem(Item item, MultipartFile file, String email) {
+		String imageName = "default.jpg";
+		Account account = accountService.findAccountByEmail(email);
+		Item itemTmp = null;
+		if (handleImg.uploadFileHandler(file)) {
+			imageName = file.getOriginalFilename();
+		}
+		if (item.getId() == 0) {
+			itemTmp = new Item(item.getItemTitle(), item.getItemDesciption(),
+					imageName, item.getMinimumBid(), item.getBidIncremenent(),
+					item.getBidStartDate(), item.getBidEndDate(), account,
+					item.getCategorySub());
+		} else {
+			itemTmp = new Item(item.getId(), item.getItemTitle(),
+					item.getItemDesciption(), imageName,
+					item.getMinimumBid(), item.getBidIncremenent(),
+					item.getCurrentBid(), item.getBidStartDate(),
+					item.getBidEndDate(), item.getBidCounts(),
+					item.isBidStatus(), account,
+					item.getCategorySub());
+		}
+		return itemRepository.save(itemTmp);
 	}
 
 	@Override

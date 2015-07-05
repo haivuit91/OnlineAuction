@@ -14,7 +14,7 @@
 		    			<h3>Categories</h3>
 		    			<ul class="no-list-style footer-navigate-section">
 							<li th:each="categorySub : ${listCateSub}">
-								<a th:href="${categorySub.cateSubPath}" th:text="${categorySub.cateSubName}">CategorySub name</a>
+								<a th:href="@{'/auctions/' + ${categorySub.cateSubPath}}" th:text="${categorySub.cateSubName}">CategorySub name</a>
 							</li>
 						</ul>
 		    		</div>

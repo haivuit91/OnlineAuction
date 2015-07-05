@@ -21,7 +21,7 @@
 	<context:component-scan base-package="com.asiantech.haivu.onlineauction" />
 	<mvc:resources mapping="/resources/**" location="/resources/" />
 
-	<mvc:annotation-driven>
+	<mvc:annotation-driven conversion-service="conversionService">
 		<mvc:argument-resolvers>
 			<ref bean="sortResolver" />
 			<ref bean="pageableResolver" />
@@ -29,14 +29,14 @@
 	</mvc:annotation-driven>
 
 	<!-- Conversion -->
-<!-- 	<bean id="conversionService" -->
-<!-- 		class="org.springframework.format.support.FormattingConversionServiceFactoryBean"> -->
-<!-- 		<property name="formatters"> -->
-<!-- 			<set> -->
-<!-- 				<bean class="com.asiantech.haivu.formatter.CategorySubFormatter" /> -->
-<!-- 			</set> -->
-<!-- 		</property> -->
-<!-- 	</bean> -->
+	<bean id="conversionService"
+		class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
+		<property name="formatters">
+			<set>
+				<bean class="com.asiantech.haivu.onlineauction.formatter.CategorySubFormatter" />
+			</set>
+		</property>
+	</bean>
 
 	<!-- Thymeleaf -->
 	<bean id="templateResolver"
@@ -118,7 +118,8 @@
 		</security:authentication-provider>
 	</security:authentication-manager>
 
-	<bean id="accountService" class="com.asiantech.haivu.onlineauction.service.impl.AccountServiceImpl"></bean>
+	<bean id="accountService"
+		class="com.asiantech.haivu.onlineauction.service.impl.AccountServiceImpl"></bean>
 
 	<bean id="encoder"
 		class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder">

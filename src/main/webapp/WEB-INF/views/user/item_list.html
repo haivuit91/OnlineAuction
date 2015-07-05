@@ -16,7 +16,7 @@
 							<button type="button" class="close" data-dismiss="alert" aria-label="Close">
 								<span aria-hidden="true">&times;</span>
 							</button>
-							Add new Item successfully
+							<span th:text="${param.success}">Add new Item successfully.</span>
 						</div>
 						<div class="blog-post blog-single-post">
 		        			<h2>Item list</h2>
@@ -26,10 +26,10 @@
 		    						<th>Id</th>
 		    						<th>Image</th>
 		    						<th>Title</th>
-		    						<th>Bid start date</th>
-		    						<th>Bid end date</th>
-		    						<th>Minimum bid</th>
-		    						<th>Bid increment</th>
+		    						<th>Start date</th>
+		    						<th>End date</th>
+		    						<th>Minimum</th>
+		    						<th>Increment</th>
 		    						<th>Status</th>
 		    						<th></th>
 		    					</tr>
@@ -42,30 +42,35 @@
 		    						<td th:text="${item.minimumBid}">Minimum Bid</td>
 		    						<td th:text="${item.bidIncremenent}">Bid Incremenent</td>
 		    						<td th:text="${item.bidStatus}">Bid status</td>
-		    						<td></td>
+		    						<td style="width: 70px; padding: 0;">
+		    							<a class="btn btn-micro" th:href="@{'/item/edit-item/' + ${item.id}}"><i class="glyphicon glyphicon-pencil"></i></a>
+		    							<button class="btn btn-micro btn-red" th:attr="data-text='Are you sure you want to delete user ' + ${item.itemTitle} + '?', data-id=${item.id}">
+		    								<i class="glyphicon glyphicon-trash"></i>
+		    							</button>
+		    						</td>
 		    					</tr>
 		    				</table>
-							<div class="pagination-wrapper">
+							<div class="pagination-wrapper" th:if="${not #lists.isEmpty(listItem.content)}">
 								<ul class="pagination pagination-sm">
-									<li th:if="${currentIndex == 1}" class="disabled">
+									<li th:if="${(listItem.number + 1) == 1}" class="disabled">
 										<span aria-hidden="true">&laquo;</span>
 									</li>
-									<li th:unless="${currentIndex == 1}">
-										<a th:href="@{/item/list(page=${currentIndex - 1})}" aria-label="Previous">
-											<span aria-hidden="true">&laquo;</span>
-										</a>
-									</li>
-									<li th:each="i : ${#numbers.sequence(beginIndex, endIndex)}" th:class="${currentIndex == i} ? active">
-										<span th:if="${currentIndex == i}" th:text="${i}"></span>
-										<a th:href="@{/item/list(page=${i})}" th:unless="${currentIndex == i}" th:text="${i}"></a>
-									</li>
-									<li th:if="${currentIndex == listItem.totalPages}" class="disabled">
-										<span aria-hidden="true">&raquo;</span>
-									</li>
-									<li th:unless="${currentIndex == listItem.totalPages}">
-										<a th:href="@{/item/list(page=${currentIndex + 1})}" aria-label="Next">
-											<span aria-hidden="true">&raquo;</span>
-										</a>
+									<li th:unless="${(listItem.number + 1) == 1}"><a
+										th:href="@{/item/list(page=${listItem.number})}"
+										aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
+									</a></li>
+									<li th:each="i : ${#numbers.sequence(1, listItem.totalPages)}"
+										th:class="${(listItem.number + 1) == i} ? active"><span
+										th:if="${(listItem.number + 1) == i}" th:text="${i}"></span> <a
+										th:href="@{/item/list(page=${i})}"
+										th:unless="${(listItem.number + 1) == i}" th:text="${i}"></a></li>
+									<li th:if="${(listItem.number + 1) == listItem.totalPages}"
+										class="disabled"><span aria-hidden="true">&raquo;</span></li>
+									<li th:unless="${(listItem.number + 1) == listItem.totalPages}">
+										<a
+										th:href="@{/item/list(page=${(listItem.number + 1) + 1})}"
+										aria-label="Next"> <span aria-hidden="true">&raquo;</span>
+									</a>
 									</li>
 								</ul>
 							</div>

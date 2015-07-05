@@ -1211,7 +1211,7 @@ span.color-red {
   width: 100%;
 }
 .jobs-list th {
-  font-size: 1.2em;
+  font-size: 1.1em;
   text-align: left;
   padding: 10px 0;
 }
@@ -2687,7 +2687,7 @@ span.color-red {
 }
 .btn-micro {
   padding: 1px 8px;
-  font-size: 10px;
+  font-size: 15px;
 }
 .btn-grey {
   border: 1px solid #cecece;

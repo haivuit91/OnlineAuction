@@ -37,7 +37,7 @@
 						</div>
 					</div>
 				</div>
-				<div class="pagination-wrapper">
+				<div class="pagination-wrapper" th:if="${not #lists.isEmpty(listItem.content)}">
 					<ul class="pagination pagination-lg">
 						<li th:if="${(listItem.number + 1) == 1}" class="disabled">
 							<span aria-hidden="true">&laquo;</span>
