@@ -24,6 +24,6 @@ public interface ItemService {
 	
 	Item updateCurrentBidItem(Item item, double currentBid);
 
-	Item deleteItem(long id);
+	boolean deleteItem(long id);
 
 }

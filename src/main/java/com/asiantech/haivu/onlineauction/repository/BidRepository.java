@@ -15,5 +15,9 @@ public interface BidRepository extends JpaRepository<Bid, Long> {
 	List<Bid> findByAccountOrderByMaximumBidDesc(Account account);
 	
 	Bid findByAccountAndItem(Account account, Item item);
-
+	
+	List<Bid> findByItem(Item item);
+	
+	Long deleteByItem(Item item);
+	
 }

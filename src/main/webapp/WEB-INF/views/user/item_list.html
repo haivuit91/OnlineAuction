@@ -44,7 +44,7 @@
 		    						<td th:text="${item.bidStatus}">Bid status</td>
 		    						<td style="width: 70px; padding: 0;">
 		    							<a class="btn btn-micro" th:href="@{'/item/edit-item/' + ${item.id}}"><i class="glyphicon glyphicon-pencil"></i></a>
-		    							<button class="btn btn-micro btn-red" th:attr="data-text='Are you sure you want to delete user ' + ${item.itemTitle} + '?', data-id=${item.id}">
+		    							<button class="btn btn-micro btn-red btn-delete" th:attr="data-text='Are you sure you want to delete Item ' + ${item.itemTitle} + '?', data-id=${item.id}">
 		    								<i class="glyphicon glyphicon-trash"></i>
 		    							</button>
 		    						</td>
@@ -78,6 +78,31 @@
 					</div>
 				</div>
 			</div>
+			<script type="text/javascript">
+				$(".btn-delete").confirm({
+					confirm : function(button) {
+						var itemId = $(button).data("id");
+						$.ajax({
+							type: "POST",
+							url: "delete",
+							data: {itemId : itemId},
+							success: function(response) {
+								if(response == true) {
+									alert("Delete Item successful.");
+								} else {
+									alert("Delete Item fail.");
+								};
+							}
+						});
+					},
+					cancel : function(button) {
+						return false;
+					},
+					confirmButton : "Yes",
+					cancelButton : "No",
+					post : true
+				});
+			</script>
 		</div>
 	</body>
 </html>

@@ -36,6 +36,11 @@ public class RatingServiceImpl implements RatingService {
 	}
 
 	@Override
+	public int countRatingByAccountRating(long accountId) {
+		return ratingRepository.countByAccountRating(accountId);
+	}
+
+	@Override
 	@Transactional
 	public boolean ratingAccount(double point, long accountId, String email) {
 		boolean check = false;

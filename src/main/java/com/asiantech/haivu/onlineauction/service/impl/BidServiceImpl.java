@@ -44,9 +44,8 @@ public class BidServiceImpl implements BidService {
 	}
 
 	@Override
-	public Bid findBidByAccountAndItem(Account account, Item item) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<Bid> findBidByItem(Item item) {
+		return bidRepository.findByItem(item);
 	}
 
 	@Override
@@ -78,6 +77,11 @@ public class BidServiceImpl implements BidService {
 			check = true;
 		}
 		return check;
+	}
+
+	@Override
+	public Long deleteBidByItem(Item item) {
+		return bidRepository.deleteByItem(item);
 	}
 
 }

@@ -12,5 +12,7 @@ public interface RatingService {
 	List<Rating> fintAllRatingByAccountRating(long accountId);
 	
 	boolean ratingAccount(double point, long accountId, String email);
+	
+	int countRatingByAccountRating(long accountId);
 
 }

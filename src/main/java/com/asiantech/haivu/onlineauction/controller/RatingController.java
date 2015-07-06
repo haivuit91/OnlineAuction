@@ -1,7 +1,5 @@
 package com.asiantech.haivu.onlineauction.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
@@ -12,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.asiantech.haivu.onlineauction.model.Rating;
 import com.asiantech.haivu.onlineauction.service.RatingService;
 
 @Controller
@@ -36,9 +33,7 @@ public class RatingController {
 	@RequestMapping(value = "count", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public int countRating(@RequestParam("accountId") long accountId) {
-		List<Rating> listRating = ratingService.fintAllRatingByAccountRating(accountId);
-		int count = listRating.size();
-		return count;
+		return ratingService.countRatingByAccountRating(accountId);
 	}
 
 }

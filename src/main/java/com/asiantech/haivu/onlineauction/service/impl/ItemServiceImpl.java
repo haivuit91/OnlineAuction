@@ -1,6 +1,7 @@
 package com.asiantech.haivu.onlineauction.service.impl;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.annotation.Resource;
 
@@ -13,10 +14,12 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.asiantech.haivu.onlineauction.common.PageAbleCommon;
 import com.asiantech.haivu.onlineauction.model.Account;
+import com.asiantech.haivu.onlineauction.model.Bid;
 import com.asiantech.haivu.onlineauction.model.CategorySub;
 import com.asiantech.haivu.onlineauction.model.Item;
 import com.asiantech.haivu.onlineauction.repository.ItemRepository;
 import com.asiantech.haivu.onlineauction.service.AccountService;
+import com.asiantech.haivu.onlineauction.service.BidService;
 import com.asiantech.haivu.onlineauction.service.CategorySubService;
 import com.asiantech.haivu.onlineauction.service.ItemService;
 import com.asiantech.haivu.onlineauction.util.HandleImage;
@@ -32,6 +35,9 @@ public class ItemServiceImpl implements ItemService {
 	
 	@Autowired
 	private AccountService accountService;
+	
+	@Autowired
+	private BidService bidService;
 	
 	@Autowired
 	private HandleImage handleImg;
@@ -70,13 +76,26 @@ public class ItemServiceImpl implements ItemService {
 	@Override
 	@Transactional
 	public Item saveItem(Item item, MultipartFile file, String email) {
-		String imageName = "default.jpg";
+		String imageName = "default.png";
 		Account account = accountService.findAccountByEmail(email);
-		Item itemTmp = null;
+		if (item.getId() == 0) {
+			if (handleImg.uploadFileHandler(file)) {
+				imageName = file.getOriginalFilename();
+			}
+			return actionSave(false, item, imageName, account);
+		}
 		if (handleImg.uploadFileHandler(file)) {
 			imageName = file.getOriginalFilename();
+		} else {
+			Item imgItem = itemRepository.findOne(item.getId());
+			imageName = imgItem.getItemThumbnail();
 		}
-		if (item.getId() == 0) {
+		return actionSave(true, item, imageName, account);
+	}
+
+	private Item actionSave(boolean edit, Item item, String imageName, Account account) {
+		Item itemTmp;
+		if (!edit) {
 			itemTmp = new Item(item.getItemTitle(), item.getItemDesciption(),
 					imageName, item.getMinimumBid(), item.getBidIncremenent(),
 					item.getBidStartDate(), item.getBidEndDate(), account,
@@ -107,10 +126,22 @@ public class ItemServiceImpl implements ItemService {
 
 	@Override
 	@Transactional
-	public Item deleteItem(long id) {
+	public boolean deleteItem(long id) {
+		boolean check = false;
 		Item item = itemRepository.findOne(id);
-		itemRepository.delete(item);
-		return item;
+		if (item != null) {
+			List<Bid> listBid = bidService.findBidByItem(item);
+			if (!listBid.isEmpty()) {
+				if (bidService.deleteBidByItem(item) != 0) {
+					itemRepository.delete(item);
+					check = true;
+				}
+			} else {
+				itemRepository.delete(item);
+				check = true;
+			}
+		}
+		return check;
 	}
 
 }

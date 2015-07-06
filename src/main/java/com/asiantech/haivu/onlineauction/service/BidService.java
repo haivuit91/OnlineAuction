@@ -16,8 +16,10 @@ public interface BidService {
 
 	List<Bid> findAllBidByAccount(Account account);
 	
-	Bid findBidByAccountAndItem(Account account, Item item);
+	List<Bid> findBidByItem(Item item);
 	
 	boolean acceptBid(double maximumBid, long itemId, String email);
+	
+	Long deleteBidByItem(Item item);
 
 }
