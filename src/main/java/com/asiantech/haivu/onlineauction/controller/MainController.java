@@ -26,7 +26,6 @@ public class MainController {
 	@Autowired
 	private ImageService imageSv;
 
-	// TODO default method is GET you can remove method attribute
 	@RequestMapping(value = "/")
 	public String goHomePage(ModelMap model) {
 		return "redirect:/auctions/all";

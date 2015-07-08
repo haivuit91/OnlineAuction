@@ -33,7 +33,8 @@
 		class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
 		<property name="formatters">
 			<set>
-				<bean class="com.asiantech.haivu.onlineauction.formatter.CategorySubFormatter" />
+				<bean
+					class="com.asiantech.haivu.onlineauction.formatter.CategorySubFormatter" />
 			</set>
 		</property>
 	</bean>
@@ -164,4 +165,7 @@
 			</props>
 		</property>
 	</bean>
+	
+	<!-- Dozer -->
+	<bean id="mapper" class="org.dozer.DozerBeanMapper"></bean>
 </beans>

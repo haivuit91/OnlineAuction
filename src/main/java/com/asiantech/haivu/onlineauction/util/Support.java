@@ -2,6 +2,7 @@ package com.asiantech.haivu.onlineauction.util;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Random;
 
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
@@ -9,6 +10,10 @@ import org.springframework.mail.SimpleMailMessage;
 public class Support {
 
 	private MailSender mailSender;
+	
+	static final String AB = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+	
+	static Random rnd = new Random();
 
 	public void setMailSender(MailSender mailSender) {
 		this.mailSender = mailSender;
@@ -36,6 +41,13 @@ public class Support {
 		} catch (NoSuchAlgorithmException e) {
 		}
 		return null;
+	}
+	
+	public String randomString(int len) {
+		StringBuilder sb = new StringBuilder(len);
+		for (int i = 0; i < len; i++)
+			sb.append(AB.charAt(rnd.nextInt(AB.length())));
+		return sb.toString();
 	}
 
 }

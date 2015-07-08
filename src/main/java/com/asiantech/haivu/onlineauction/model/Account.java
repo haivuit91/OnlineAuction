@@ -97,12 +97,29 @@ public class Account {
 	 * @param fullName
 	 * @param email
 	 * @param verification
-	 *            Create account with role User
+	 * 
+	 * Create new Account with role USER
 	 */
 	public Account(String accountName, String pwd, String fullName,
 			String email, String verification) {
-		this(0, accountName, pwd, fullName, null, 0, email, Status.ENABLE,
+		this(0, accountName, pwd, fullName, null, 0, email, Status.DISABLE,
 				Role.ROLE_USER, 0, verification);
+	}
+	
+	/**
+	 * @param accountName
+	 * @param pwd
+	 * @param fullName
+	 * @param email
+	 * @param status
+	 * @param role
+	 * 
+	 * Create new Account by Admin
+	 */
+	public Account(String accountName, String pwd, String fullName,
+			String email, Role role, String verification) {
+		this(0, accountName, pwd, fullName, null, 0, email, Status.DISABLE,
+				role, 0, verification);
 	}
 	
 	public long getId() {

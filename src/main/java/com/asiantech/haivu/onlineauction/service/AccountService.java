@@ -20,9 +20,13 @@ public interface AccountService extends UserDetailsService {
 	Account findAccountByEmail(String email);
 
 	Account findAccountByEmailAndStatus(String email, Status status);
-
-	Account saveAccount(Account account);
+	
+	Account userRegister(Account account);
+	
+	Account addNewAccount(Account account);
 	
 	boolean updateTrustAccount(double trust, Account account);
-
+	
+	boolean updateStatusByIdAndVerification(long accountId, String verification);
+	
 }

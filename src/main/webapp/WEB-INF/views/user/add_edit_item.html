@@ -60,7 +60,6 @@
 										</div>
 										<div th:class="${#fields.hasErrors('bidStatus')} ? 'form-group has-error' : form-group" th:if="${breadcrumbs} == 'Edit item'">
 											<label for="bidStatus"><b>Status</b></label>
-<!-- 			        				 		<input class="form-control" id="bidStatus" th:field="*{bidStatus}" type="checkbox" /> -->
 			        				 		<select class="form-control" id="bidStatus" th:field="*{bidStatus}">
   												<option value="true" >Enable</option>
   												<option value="false" >Disable</option>
