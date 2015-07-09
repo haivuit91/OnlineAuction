@@ -14,14 +14,29 @@ public class VerificationMailServiceImpl implements VerificationMailService {
 	@Autowired
 	@Qualifier("mailSender")
 	private MailSender mailSender;
+	
+	private String to = "";
+    private String subject = "";
+    private String body = "";
 
 	@Override
-	public void sendMail(String to, String subject, String body) {
+    public void verifyEmail(String to, String subject, String body) {
+        this.to = to;
+        this.subject = subject;
+        this.body = body;
+    }
+
+	public void sendMail() {
 		SimpleMailMessage message = new SimpleMailMessage();
 		message.setTo(to);
 		message.setSubject(subject);
 		message.setText(body);
 		mailSender.send(message);
+	}
+
+	@Override
+	public void run() {
+		this.sendMail();
 	}
 
 }

@@ -14,5 +14,7 @@ public interface RatingService {
 	boolean ratingAccount(double point, long accountId, String email);
 	
 	int countRatingByAccountRating(long accountId);
+	
+	Long deleteRating(Account account);
 
 }

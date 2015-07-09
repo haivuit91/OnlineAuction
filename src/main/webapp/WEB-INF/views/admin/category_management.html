@@ -6,7 +6,82 @@
 	</head>
 	<body>
 		<div class="span10" th:fragment="content">
-			c
+			<h2>Category list</h2>
+			<a class="btn btn-primary" th:href="@{/admin/add-new-category}" style="margin-bottom: 20px;"><i class="fa fa-plus-circle"></i> Add new Category</a>
+			<table class="table table-bordered table-striped table-category">
+				<thead>
+					<tr>
+						<th style="width: 15px;"><input type="checkbox" /></th>
+						<th>Category name</th>
+						<th class="action"></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="category : ${listCategory.content}">
+						<td><input type="checkbox" /></td>
+						<td>
+							<a th:href="@{'/admin/list-category-sub/' + ${category.id}}" th:text="${category.cateName}">Category name</a>
+						</td>
+						<td>
+							<a th:href="@{'/admin/edit-category/' + ${category.id}}"><i class="fa fa-pencil-square-o"></i></a>
+							<a th:href="@{#}" class="delete-category" th:attr="data-text='Are you sure you want to delete category ' + ${category.cateName} + '?', data-id=${category.id}"><i class="fa fa-trash-o"></i></a>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<div class="pagination" th:if="${not #lists.isEmpty(listCategory.content)}">
+				<ul>
+					<li th:if="${(listCategory.number + 1) == 1}" class="disabled">
+						<span aria-hidden="true">&laquo;</span>
+					</li>
+					<li th:unless="${(listCategory.number + 1) == 1}">
+						<a th:href="@{/admin/category-management(page=${listCategory.number})}" aria-label="Previous">
+							<span aria-hidden="true">&laquo;</span>
+						</a>
+					</li>
+					<li th:each="i : ${#numbers.sequence(1, listCategory.totalPages)}" th:class="${(listCategory.number + 1) == i} ? active">
+						<span th:if="${(listCategory.number + 1) == i}" th:text="${i}"></span>
+						<a th:href="@{/admin/category-management(page=${i})}" th:unless="${(listCategory.number + 1) == i}" th:text="${i}"></a>
+					</li>
+					<li th:if="${(listCategory.number + 1) == listCategory.totalPages}" class="disabled">
+						<span aria-hidden="true">&raquo;</span>
+					</li>
+					<li th:unless="${(listCategory.number + 1) == listCategory.totalPages}">
+						<a th:href="@{/admin/category-management(page=${(listCategory.number + 1) + 1})}" aria-label="Next">
+							<span aria-hidden="true">&raquo;</span>
+						</a>
+					</li>
+				</ul>
+			</div>
+			<script type="text/javascript">
+				$(".table-category tr").each(function() {
+					var $this = $(this);
+					$this.find('.delete-category').confirm({
+						confirm : function(button) {
+							var cateId = $(button).data("id");
+							$.ajax({
+								type: "POST",
+								url: "delete-category",
+								data: {cateId : cateId},
+								success: function(response) {
+									if(response == true) {
+										alert("Delete category successful.");
+										$this.remove();
+									} else {
+										alert("Delete category fail.");
+									};
+								}
+							});
+						},
+						cancel : function(button) {
+							return false;
+						},
+						confirmButton : "Yes",
+						cancelButton : "No",
+						post : true
+					});
+				});
+			</script>
 		</div>
 	</body>
 </html>

@@ -6,6 +6,7 @@ import javax.annotation.Resource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.asiantech.haivu.onlineauction.model.Account;
 import com.asiantech.haivu.onlineauction.model.Bid;
@@ -49,6 +50,7 @@ public class BidServiceImpl implements BidService {
 	}
 
 	@Override
+	@Transactional
 	public boolean acceptBid(double maximumBid, long itemId, String email) {
 		boolean check = false;
 		Item item = itemSv.findItemById(itemId);
@@ -80,6 +82,7 @@ public class BidServiceImpl implements BidService {
 	}
 
 	@Override
+	@Transactional
 	public Long deleteBidByItem(Item item) {
 		return bidRepository.deleteByItem(item);
 	}

@@ -16,5 +16,7 @@ public interface RatingRepository extends JpaRepository<Rating, Long> {
 	Rating findByAccountRatingAndAccount(long accountId, Account account);
 	
 	int countByAccountRating(long accountId);
+	
+	Long deleteByAccount(Account account);
 
 }

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+	<head>
+	</head>
+	<body>
+		<div class="span10" th:fragment="content">
+			<h2>Category sub list</h2>
+			<a class="btn" th:href="@{/admin/category-management}" style="margin-bottom: 20px;"><i class="fa fa-long-arrow-left"></i> Back</a>
+			<a class="btn btn-primary" th:href="@{/admin/add-new-category-sub}" style="margin-bottom: 20px;"><i class="fa fa-plus-circle"></i> Add new Category sub</a>
+			<table class="table table-bordered table-striped table-category-sub">
+				<thead>
+					<tr>
+						<th style="width: 15px;"><input type="checkbox" /></th>
+						<th>Category sub name</th>
+						<th>URL</th>
+						<th class="action"></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="categorySub : ${listCategorySub.content}">
+						<td><input type="checkbox" /></td>
+						<td th:text="${categorySub.cateSubName}">Category name</td>
+						<td th:text="${categorySub.cateSubPath}">Category path</td>
+						<td>
+							<a th:href="@{'/admin/edit-category-sub/' + ${categorySub.id}}"><i class="fa fa-pencil-square-o"></i></a>
+							<a th:href="@{#}" class="delete-category-sub" th:attr="data-text='Are you sure you want to delete category sub ' + ${categorySub.cateSubName} + '?', data-id=${categorySub.id}"><i class="fa fa-trash-o"></i></a>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<div class="pagination" th:if="${not #lists.isEmpty(listCategorySub.content)}">
+				<ul>
+					<li th:if="${(listCategorySub.number + 1) == 1}" class="disabled">
+						<span aria-hidden="true">&laquo;</span>
+					</li>
+					<li th:unless="${(listCategorySub.number + 1) == 1}">
+						<a th:href="@{/admin/list-category-sub(page=${listCategorySub.number})}" aria-label="Previous">
+							<span aria-hidden="true">&laquo;</span>
+						</a>
+					</li>
+					<li th:each="i : ${#numbers.sequence(1, listCategorySub.totalPages)}" th:class="${(listCategorySub.number + 1) == i} ? active">
+						<span th:if="${(listCategorySub.number + 1) == i}" th:text="${i}"></span>
+						<a th:href="@{/admin/list-category-sub(page=${i})}" th:unless="${(listCategorySub.number + 1) == i}" th:text="${i}"></a>
+					</li>
+					<li th:if="${(listCategorySub.number + 1) == listCategorySub.totalPages}" class="disabled">
+						<span aria-hidden="true">&raquo;</span>
+					</li>
+					<li th:unless="${(listCategorySub.number + 1) == listCategorySub.totalPages}">
+						<a th:href="@{/admin/list-category-sub(page=${(listCategorySub.number + 1) + 1})}" aria-label="Next">
+							<span aria-hidden="true">&raquo;</span>
+						</a>
+					</li>
+				</ul>
+			</div>
+			<script type="text/javascript">
+				$(".table-category-sub tr").each(function() {
+					var $this = $(this);
+					$this.find('.delete-category-sub').confirm({
+						confirm : function(button) {
+							var cateSubId = $(button).data("id");
+							$.ajax({
+								type: "POST",
+								url: "../delete-category-sub",
+								data: {cateSubId : cateSubId},
+								success: function(response) {
+									if(response == true) {
+										alert("Delete category sub successful.");
+										$this.remove();
+									} else {
+										alert("Delete category sub fail.");
+									};
+								}
+							});
+						},
+						cancel : function(button) {
+							return false;
+						},
+						confirmButton : "Yes",
+						cancelButton : "No",
+						post : true
+					});
+				});
+			</script>
+		</div>
+	</body>
+</html>

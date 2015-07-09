@@ -6,9 +6,9 @@
 	</head>
 	<body>
 		<div class="span10" th:fragment="content">
-			<h2>List User</h2>
+			<h2>User list</h2>
 			<a class="btn btn-primary" th:href="@{/admin/add-new-user}" style="margin-bottom: 20px;"><i class="fa fa-plus-circle"></i> Add new User</a>
-			<table class="table table-bordered table-striped">
+			<table class="table table-bordered table-striped table-user">
 				<thead>
 					<tr>
 						<th style="width: 15px;"><input type="checkbox" /></th>
@@ -32,7 +32,7 @@
 						<td th:text="${account.status}">Status</td>
 						<td>
 							<a th:href="@{'/admin/edit-user/' + ${account.id}}"><i class="fa fa-pencil-square-o"></i></a>
-							<a th:href="@{#}"><i class="fa fa-trash-o"></i></a>
+							<a th:href="@{#}" class="delete-account" th:attr="data-text='Are you sure you want to delete user ' + ${account.accountName} + '?', data-id=${account.id}"><i class="fa fa-trash-o"></i></a>
 						</td>
 					</tr>
 				</tbody>
@@ -61,6 +61,35 @@
 					</li>
 				</ul>
 			</div>
+			<script type="text/javascript">
+				$(".table-user tr").each(function() {
+					var $this = $(this);
+					$this.find('.delete-account').confirm({
+						confirm : function(button) {
+							var accountId = $(button).data("id");
+							$.ajax({
+								type: "POST",
+								url: "delete-user",
+								data: {accountId : accountId},
+								success: function(response) {
+									if(response == true) {
+										alert("Delete user successful.");
+										$this.remove();
+									} else {
+										alert("Delete user fail.");
+									};
+								}
+							});
+						},
+						cancel : function(button) {
+							return false;
+						},
+						confirmButton : "Yes",
+						cancelButton : "No",
+						post : true
+					});
+				});
+			</script>
 		</div>
 	</body>
 </html>

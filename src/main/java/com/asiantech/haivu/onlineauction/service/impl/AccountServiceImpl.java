@@ -22,8 +22,10 @@ import com.asiantech.haivu.onlineauction.common.PageAbleCommon;
 import com.asiantech.haivu.onlineauction.enums.Role;
 import com.asiantech.haivu.onlineauction.enums.Status;
 import com.asiantech.haivu.onlineauction.model.Account;
+import com.asiantech.haivu.onlineauction.model.Rating;
 import com.asiantech.haivu.onlineauction.repository.AccountRepository;
 import com.asiantech.haivu.onlineauction.service.AccountService;
+import com.asiantech.haivu.onlineauction.service.RatingService;
 import com.asiantech.haivu.onlineauction.service.VerificationMailService;
 import com.asiantech.haivu.onlineauction.util.Support;
 
@@ -32,6 +34,9 @@ public class AccountServiceImpl implements AccountService {
 
 	@Resource
 	private AccountRepository accountRepository;
+	
+	@Autowired
+	private RatingService ratingService;
 
 	@Autowired
 	private VerificationMailService verificationMailSv;
@@ -39,7 +44,7 @@ public class AccountServiceImpl implements AccountService {
 	private Support support = new Support();
 
 	private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-
+	
 	public List<String> getRoles(Role role) {
 		List<String> roles = new ArrayList<>();
 		roles.add(role.name());
@@ -91,7 +96,9 @@ public class AccountServiceImpl implements AccountService {
 		Account accountVerify = accountRepository.save(acc);
 		if(accountVerify != null) {
 			String verifyLink = "http://localhost:8081/OnlineAuction/account/verify-email?uid=" + accountVerify.getId() + "&code=" + verifyCode;
-			verificationMailSv.sendMail(accountVerify.getEmail(), "Verify your account", verifyLink);
+			verificationMailSv.verifyEmail(accountVerify.getEmail(), "Verify your account", verifyLink);
+			Thread t = new Thread(verificationMailSv);
+	        t.start();
 		}
 		return accountVerify;
 	}
@@ -99,16 +106,13 @@ public class AccountServiceImpl implements AccountService {
 	@Override
 	@Transactional
 	public Account addNewAccount(Account account) {
-		String randomPwd = support.randomString(6);
-		String verifyCode = support.randomString(30);
-		String pwd = passwordEncoder.encode(randomPwd);
-		Account acc = new Account(account.getAccountName(), pwd, account.getFullName(), account.getEmail(), account.getRole(), verifyCode);
-		Account accountConfirm = accountRepository.save(acc);
-		if(accountConfirm != null) {
-			String verifyLink = "Pass: " + randomPwd + ", http://localhost:8081/OnlineAuction/account/verify-email?uid=" + accountConfirm.getId() + "&code=" + verifyCode;
-			verificationMailSv.sendMail(accountConfirm.getEmail(), "Verify your account", verifyLink);
+		if(account.getId() == 0) {
+			return saveNewAccount(account);
 		}
-		return accountConfirm;
+		Account newAccount = new Account(account.getId(), account.getAccountName(), account.getPwd(), account.getFullName(), 
+				account.getDateOfBirth(), account.getSex(), account.getEmail(), account.getStatus(), account.getRole(), 
+				account.getTrust(), account.getVerification());
+		return accountRepository.save(newAccount);
 	}
 
 	@Override
@@ -152,6 +156,41 @@ public class AccountServiceImpl implements AccountService {
 			}
 		}
 		return check;
+	}
+
+	@Override
+	@Transactional
+	public boolean deleteAccount(long accountId) {
+		boolean check = false;
+		Account account = accountRepository.findOne(accountId);
+		if(account != null) {
+			List<Rating> listRating = ratingService.findAllRatingByAccount(account);
+			if(!listRating.isEmpty()) {
+				if(ratingService.deleteRating(account) != 0) {
+					accountRepository.delete(account);
+					check = true;
+				}
+			} else {
+				accountRepository.delete(account);
+				check = true;
+			}
+		}
+		return check;
+	}
+
+	private Account saveNewAccount(Account account) {
+		String randomPwd = support.randomString(6);
+		String verifyCode = support.randomString(30);
+		String pwd = passwordEncoder.encode(randomPwd);
+		Account acc = new Account(account.getAccountName(), pwd, account.getFullName(), account.getEmail(), account.getRole(), verifyCode);
+		Account accountConfirm = accountRepository.save(acc);
+		if(accountConfirm != null) {
+			String verifyLink = "Pass: " + randomPwd + ", http://localhost:8081/OnlineAuction/account/verify-email?uid=" + accountConfirm.getId() + "&code=" + verifyCode;
+			verificationMailSv.verifyEmail(accountConfirm.getEmail(), "Verify your account", verifyLink);
+			Thread t = new Thread(verificationMailSv);
+		    t.start();
+		}
+		return accountConfirm;
 	}
 
 }

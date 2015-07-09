@@ -29,4 +29,6 @@ public interface AccountService extends UserDetailsService {
 	
 	boolean updateStatusByIdAndVerification(long accountId, String verification);
 	
+	boolean deleteAccount(long accountId);
+	
 }

@@ -6,7 +6,96 @@
 	</head>
 	<body>
 		<div class="span10" th:fragment="content">
-			i
+			<h2>Item list</h2>
+			<a class="btn btn-primary" th:href="@{/admin/add-new-item}" style="margin-bottom: 20px;"><i class="fa fa-plus-circle"></i> Add new Item</a>
+			<table class="table table-bordered table-striped table-item">
+				<thead>
+					<tr>
+						<th style="width: 15px;"><input type="checkbox" /></th>
+						<th>Id</th>
+						<th>Image</th>
+						<th>Title</th>
+						<th>Start date</th>
+						<th>End date</th>
+						<th>Minimum</th>
+						<th>Increment</th>
+						<th>Status</th>
+						<th>User</th>
+						<th class="action"></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="item : ${listItem.content}">
+						<td><input type="checkbox" /></td>
+						<td th:text="${item.id}">Id</td>
+		    			<td class="images"><img th:src="@{'/image/' + ${item.itemThumbnail}}" th:alt="${item.itemTitle}" /></td>
+		    			<td><a th:href="@{#}" th:text="${item.itemTitle}">Item title</a></td>
+		    			<td th:text="${#calendars.format(item.bidStartDate,'dd/MM/yyyy HH:mm')}">Bid start date</td>
+		    			<td th:text="${#calendars.format(item.bidEndDate,'dd/MM/yyyy HH:mm')}">Bid end date</td>
+		    			<td th:text="${item.minimumBid}">Minimum Bid</td>
+		    			<td th:text="${item.bidIncremenent}">Bid Incremenent</td>
+		    			<td th:text="${item.bidStatus}">Bid status</td>
+		    			<td th:text="${item.account.accountName}">User</td>
+						<td>
+							<a th:href="@{'/admin/edit-item/' + ${item.id}}"><i class="fa fa-pencil-square-o"></i></a>
+							<a th:href="@{#}" class="delete-item" th:attr="data-text='Are you sure you want to delete item ' + ${item.itemTitle} + '?', data-id=${item.id}"><i class="fa fa-trash-o"></i></a>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<div class="pagination" th:if="${not #lists.isEmpty(listItem.content)}">
+				<ul>
+					<li th:if="${(listItem.number + 1) == 1}" class="disabled">
+						<span aria-hidden="true">&laquo;</span>
+					</li>
+					<li th:unless="${(listItem.number + 1) == 1}">
+						<a th:href="@{/admin/item-management(page=${listItem.number})}" aria-label="Previous">
+							<span aria-hidden="true">&laquo;</span>
+						</a>
+					</li>
+					<li th:each="i : ${#numbers.sequence(1, listItem.totalPages)}" th:class="${(listItem.number + 1) == i} ? active">
+						<span th:if="${(listItem.number + 1) == i}" th:text="${i}"></span>
+						<a th:href="@{/admin/item-management(page=${i})}" th:unless="${(listItem.number + 1) == i}" th:text="${i}"></a>
+					</li>
+					<li th:if="${(listItem.number + 1) == listItem.totalPages}" class="disabled">
+						<span aria-hidden="true">&raquo;</span>
+					</li>
+					<li th:unless="${(listItem.number + 1) == listItem.totalPages}">
+						<a th:href="@{/admin/item-management(page=${(listItem.number + 1) + 1})}" aria-label="Next">
+							<span aria-hidden="true">&raquo;</span>
+						</a>
+					</li>
+				</ul>
+			</div>
+			<script type="text/javascript">
+				$(".table-item tr").each(function() {
+					var $this = $(this);
+					$this.find('.delete-item').confirm({
+						confirm : function(button) {
+							var itemId = $(button).data("id");
+							$.ajax({
+								type: "POST",
+								url: "delete-item",
+								data: {itemId : itemId},
+								success: function(response) {
+									if(response == true) {
+										alert("Delete item successful.");
+										$this.remove();
+									} else {
+										alert("Delete item fail.");
+									};
+								}
+							});
+						},
+						cancel : function(button) {
+							return false;
+						},
+						confirmButton : "Yes",
+						cancelButton : "No",
+						post : true
+					});
+				});
+			</script>
 		</div>
 	</body>
 </html>

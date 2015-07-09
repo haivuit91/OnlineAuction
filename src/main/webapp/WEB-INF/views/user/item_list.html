@@ -44,7 +44,7 @@
 		    						<td th:text="${item.bidStatus}">Bid status</td>
 		    						<td style="width: 70px; padding: 0;">
 		    							<a class="btn btn-micro" th:href="@{'/item/edit-item/' + ${item.id}}"><i class="glyphicon glyphicon-pencil"></i></a>
-		    							<button class="btn btn-micro btn-red btn-delete" th:attr="data-text='Are you sure you want to delete Item ' + ${item.itemTitle} + '?', data-id=${item.id}">
+		    							<button class="btn btn-micro btn-red btn-delete" th:attr="data-text='Are you sure you want to delete item ' + ${item.itemTitle} + '?', data-id=${item.id}">
 		    								<i class="glyphicon glyphicon-trash"></i>
 		    							</button>
 		    						</td>

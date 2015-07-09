@@ -43,6 +43,12 @@ public class ItemServiceImpl implements ItemService {
 	private HandleImage handleImg;
 
 	@Override
+	public Page<Item> findAllItem(Pageable pageable) {
+		Pageable page = PageAbleCommon.customePageable(pageable);
+		return itemRepository.findAll(page);
+	}
+
+	@Override
 	public Page<Item> findItemByAccountAndBidStatus(String email, boolean bidStatus, Pageable pageable) {
 		Pageable page = PageAbleCommon.customePageable(pageable);
 		Account account = accountService.findAccountByEmail(email);
@@ -71,6 +77,11 @@ public class ItemServiceImpl implements ItemService {
 	@Override
 	public Item findItemById(long id) {
 		return itemRepository.findOne(id);
+	}
+
+	@Override
+	public List<Item> findAllItemByCategorySub(CategorySub categorySub) {
+		return itemRepository.findByCategorySub(categorySub);
 	}
 
 	@Override
@@ -139,6 +150,28 @@ public class ItemServiceImpl implements ItemService {
 			} else {
 				itemRepository.delete(item);
 				check = true;
+			}
+		}
+		return check;
+	}
+
+	@Override
+	@Transactional
+	public boolean deleteItemByCategorySub(CategorySub categorySub) {
+		boolean check = false;
+		List<Item> item = itemRepository.findByCategorySub(categorySub);
+		if (!item.isEmpty()) {
+			for (Item itemList : item) {
+				List<Bid> listBid = bidService.findBidByItem(itemList);
+				if (!listBid.isEmpty()) {
+					if (bidService.deleteBidByItem(itemList) != 0) {
+						itemRepository.deleteByCategorySub(categorySub);
+						check = true;
+					}
+				} else {
+					itemRepository.deleteByCategorySub(categorySub);
+					check = true;
+				}
 			}
 		}
 		return check;

@@ -1,6 +1,7 @@
 package com.asiantech.haivu.onlineauction.repository;
 
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,5 +22,9 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
 
 	Page<Item> findByCategorySubAndBidStartDateBeforeAndBidEndDateAfter(CategorySub categorySub, Date bidStartDate, 
 			Date bidEndDate, Pageable pageable);
+	
+	List<Item> findByCategorySub(CategorySub categorySub);
+	
+	Long deleteByCategorySub(CategorySub categorySub);
 	
 }
