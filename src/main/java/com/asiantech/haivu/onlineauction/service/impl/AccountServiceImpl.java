@@ -22,9 +22,11 @@ import com.asiantech.haivu.onlineauction.common.PageAbleCommon;
 import com.asiantech.haivu.onlineauction.enums.Role;
 import com.asiantech.haivu.onlineauction.enums.Status;
 import com.asiantech.haivu.onlineauction.model.Account;
+import com.asiantech.haivu.onlineauction.model.Item;
 import com.asiantech.haivu.onlineauction.model.Rating;
 import com.asiantech.haivu.onlineauction.repository.AccountRepository;
 import com.asiantech.haivu.onlineauction.service.AccountService;
+import com.asiantech.haivu.onlineauction.service.ItemService;
 import com.asiantech.haivu.onlineauction.service.RatingService;
 import com.asiantech.haivu.onlineauction.service.VerificationMailService;
 import com.asiantech.haivu.onlineauction.util.Support;
@@ -37,6 +39,9 @@ public class AccountServiceImpl implements AccountService {
 	
 	@Autowired
 	private RatingService ratingService;
+	
+	@Autowired
+	private ItemService itemService;
 
 	@Autowired
 	private VerificationMailService verificationMailSv;
@@ -109,9 +114,10 @@ public class AccountServiceImpl implements AccountService {
 		if(account.getId() == 0) {
 			return saveNewAccount(account);
 		}
-		Account newAccount = new Account(account.getId(), account.getAccountName(), account.getPwd(), account.getFullName(), 
-				account.getDateOfBirth(), account.getSex(), account.getEmail(), account.getStatus(), account.getRole(), 
-				account.getTrust(), account.getVerification());
+		Account acc = accountRepository.findOne(account.getId());
+		Account newAccount = new Account(account.getId(), acc.getAccountName(), acc.getPwd(), account.getFullName(), 
+				account.getDateOfBirth(), account.getSex(), acc.getEmail(), account.getStatus(), account.getRole(), 
+				acc.getTrust(), acc.getVerification());
 		return accountRepository.save(newAccount);
 	}
 
@@ -165,8 +171,9 @@ public class AccountServiceImpl implements AccountService {
 		Account account = accountRepository.findOne(accountId);
 		if(account != null) {
 			List<Rating> listRating = ratingService.findAllRatingByAccount(account);
-			if(!listRating.isEmpty()) {
-				if(ratingService.deleteRating(account) != 0) {
+			List<Item> listItem = itemService.findAllItemByAccount(account);
+			if(!listRating.isEmpty() || !listItem.isEmpty()) {
+				if(ratingService.deleteRating(account) != 0 || itemService.deleteItemByAccount(account)) {
 					accountRepository.delete(account);
 					check = true;
 				}
@@ -175,6 +182,7 @@ public class AccountServiceImpl implements AccountService {
 				check = true;
 			}
 		}
+		System.out.println("5");
 		return check;
 	}
 

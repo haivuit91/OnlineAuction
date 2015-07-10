@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.asiantech.haivu.onlineauction.model.Account;
 import com.asiantech.haivu.onlineauction.model.CategorySub;
 import com.asiantech.haivu.onlineauction.model.Item;
 
@@ -27,6 +28,8 @@ public interface ItemService {
 	
 	List<Item> findAllItemByCategorySub(CategorySub categorySub);
 	
+	List<Item> findAllItemByAccount(Account account);
+	
 	Item saveItem(Item item, MultipartFile file, String email);
 	
 	Item updateCurrentBidItem(Item item, double currentBid);
@@ -34,5 +37,7 @@ public interface ItemService {
 	boolean deleteItem(long id);
 	
 	boolean deleteItemByCategorySub(CategorySub categorySub);
+	
+	boolean deleteItemByAccount(Account account);
 
 }

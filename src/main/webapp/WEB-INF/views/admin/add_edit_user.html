@@ -6,8 +6,8 @@
 	</head>
 	<body>
 		<div class="span10" th:fragment="content">
-			<h2>Add new User</h2>
-			<form id="add-new-user" class="form-horizontal" th:action="@{/admin/add-new-user}" th:object="${account}" method="post">
+			<h2 th:text="${action}">Title</h2>
+			<form id="add-edit-user" class="form-horizontal" th:action="@{/admin/add-new-user}" th:object="${account}" method="post">
 				<fieldset>
 					<legend></legend>
 					<ul th:if="${#fields.hasErrors('*')}">
@@ -18,7 +18,7 @@
 					<div th:class="${#fields.hasErrors('accountName')} ? 'control-group has-error' : control-group">
 						<label class="control-label" for="accountName">User name</label>
 						<div class="controls">
-							<input type="text" class="input-xlarge" id="accountName" th:field="*{accountName}" />
+							<input type="text" class="input-xlarge" th:readonly="${action} == 'Edit User' ? true : false" id="accountName" th:field="*{accountName}" />
 						</div>
 					</div>
 					<div th:class="${#fields.hasErrors('fullName')} ? 'control-group has-error' : control-group">
@@ -27,10 +27,25 @@
 							<input type="text" class="input-xlarge" id="fullName" th:field="*{fullName}" />
 						</div>
 					</div>
+					<div th:class="${#fields.hasErrors('dateOfBirth')} ? 'control-group has-error' : control-group">
+						<label class="control-label" for="dateOfBirth">Date Of Birth</label>
+						<div class="controls">
+							<input type="text" class="input-xlarge" id="dateOfBirth" readonly="readonly" th:field="*{dateOfBirth}" />
+						</div>
+					</div>
+					<div th:class="${#fields.hasErrors('sex')} ? 'control-group has-error' : control-group">
+						<label class="control-label" for="select01">Sex</label>
+						<div class="controls">
+							<select id="sex" th:field="*{sex}">
+								<option th:value="1">Male</option>
+								<option th:value="0">Female</option>
+							</select>
+						</div>
+					</div>
 					<div th:class="${#fields.hasErrors('email')} ? 'control-group has-error' : control-group">
 						<label class="control-label" for="email">Email</label>
 						<div class="controls">
-							<input type="text" class="input-xlarge" id="email" th:field="*{email}" />
+							<input type="text" class="input-xlarge" readonly="readonly" th:readonly="${action} == 'Edit User' ? true : false" id="email" th:field="*{email}" />
 						</div>
 					</div>
 					<div th:class="${#fields.hasErrors('role')} ? 'control-group has-error' : control-group">
@@ -41,14 +56,31 @@
 							</select>
 						</div>
 					</div>
+					<div th:class="${#fields.hasErrors('status')} ? 'control-group has-error' : control-group" th:if="${action} == 'Edit User'">
+						<label class="control-label" for="select01">Status</label>
+						<div class="controls">
+							<select id="status" th:field="*{status}">
+								<option th:each="status : ${T(com.asiantech.haivu.onlineauction.enums.Status).values()}" th:value="${status}" th:text="${status}">Status</option>
+							</select>
+						</div>
+					</div>
 					<div class="form-actions">
-						<button type="submit" class="btn btn-primary">Add</button>
+						<button type="submit" class="btn btn-primary" th:text="${action} == 'Edit User' ? Save : Add">Action</button>
 						<button class="btn">Cancel</button>
 					</div>
 				</fieldset>
 			</form>
 			<script type="text/javascript">
 				document.getElementById("pwd").value = "123456";
+				$(function () {
+					$('#dateOfBirth').datetimepicker({
+		                format: "dd/mm/yyyy",
+		                autoclose: true,
+		                todayBtn: true,
+		                language: 'en',
+		        		minView: 2,
+		            });
+				});
 			</script>
 		</div>
 	</body>

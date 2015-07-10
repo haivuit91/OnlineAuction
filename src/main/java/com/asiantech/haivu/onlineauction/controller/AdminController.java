@@ -1,5 +1,7 @@
 package com.asiantech.haivu.onlineauction.controller;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,16 +9,23 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.asiantech.haivu.onlineauction.model.Account;
+import com.asiantech.haivu.onlineauction.model.Category;
+import com.asiantech.haivu.onlineauction.model.CategorySub;
+import com.asiantech.haivu.onlineauction.model.Item;
 import com.asiantech.haivu.onlineauction.service.AccountService;
 import com.asiantech.haivu.onlineauction.service.CategoryService;
 import com.asiantech.haivu.onlineauction.service.CategorySubService;
@@ -42,6 +51,16 @@ public class AdminController extends ShowPage {
 	// @Autowired
 	// private Mapper mapper;
 
+	@ModelAttribute("allCategory")
+	public List<Category> populateCategory() {
+		return this.categoryService.findAllCategory();
+	}
+	
+	@ModelAttribute("allCategorySub")
+	public List<CategorySub> populateCategorySub() {
+		return this.categorySubService.findAllCategorySub();
+	}
+
 	@RequestMapping(value = "dashboard")
 	public String goDashboardPage(ModelMap model) {
 		model.put("layout", "admin/dashboard");
@@ -60,6 +79,7 @@ public class AdminController extends ShowPage {
 	
 	@RequestMapping(value = "add-new-user", method = RequestMethod.GET)
 	public String addNewUser(ModelMap model, Account account) {
+		model.put("action", "Add new User");
 		model.put("layout", "admin/add_edit_user");
 		return Constants.TEMPLATE_ADMIN;
 	}
@@ -68,6 +88,7 @@ public class AdminController extends ShowPage {
 	public String editUser(@PathVariable("accountId") long accountId, ModelMap model) {
 		Account account = accountService.findAccountById(accountId);
 		model.put("account", account);
+		model.put("action", "Edit User");
 		model.put("layout", "admin/add_edit_user");
 		return Constants.TEMPLATE_ADMIN;
 	}
@@ -103,6 +124,33 @@ public class AdminController extends ShowPage {
 		return Constants.TEMPLATE_ADMIN;
 	}
 	
+	@RequestMapping(value = "add-new-category", method = RequestMethod.GET)
+	public String addNewCategory(Category category, ModelMap model) {
+		model.put("action", "Add new Category");
+		model.put("layout", "admin/add_edit_category");
+		return Constants.TEMPLATE_ADMIN;
+	}
+	
+	@RequestMapping(value = "edit-category/{cateId}", method = RequestMethod.GET)
+	public String editCategory(@PathVariable("cateId") long cateId, ModelMap model) {
+		Category category = categoryService.findCategoryById(cateId);
+		model.put("category", category);
+		model.put("action", "Edit Category");
+		model.put("layout", "admin/add_edit_category");
+		return Constants.TEMPLATE_ADMIN;
+	}
+	
+	@RequestMapping(value = "add-new-category", method = RequestMethod.POST)
+	public String saveCategory(@Valid Category category, BindingResult bindingResult, ModelMap model) {
+		if (bindingResult.hasErrors()) {
+			model.put("action", "Add new Category");
+			model.put("layout", "admin/add_edit_category");
+			return Constants.TEMPLATE_ADMIN;
+		}
+		categoryService.saveCategory(category);
+		return "redirect:/admin/category-management?success";
+	}
+	
 	@RequestMapping(value="delete-category", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public boolean deleteCategory(@RequestParam("cateId") long cateId) {
@@ -113,13 +161,46 @@ public class AdminController extends ShowPage {
 		return check;
 	}
 	
+	// ----------------- Category sub management -----------------
+	
 	@RequestMapping(value = "list-category-sub/{categoryId}")
 	public String goCategorySubPage(
 			@PageableDefault(page = 1, size = 5, sort = "id", direction = Direction.ASC) Pageable pageable,
 			@PathVariable("categoryId") long categoryId, ModelMap model) {
 		model = getListCategorySub(categoryId, pageable, model);
+		model.put("categoryId", categoryId);
 		model.put("layout", "admin/category_sub_list");
 		return Constants.TEMPLATE_ADMIN;
+	}
+	
+	@RequestMapping(value = "add-new-category-sub/{categoryId}", method = RequestMethod.GET)
+	public String addNewCategorySub(@PathVariable("categoryId") long categoryId, CategorySub categorySub, ModelMap model) {
+		model.put("categoryId", categoryId);
+		model.put("action", "Add new Category sub");
+		model.put("layout", "admin/add_edit_category_sub");
+		return Constants.TEMPLATE_ADMIN;
+	}
+	
+	@RequestMapping(value = "edit-category-sub/{categoryId}/{cateSubId}", method = RequestMethod.GET)
+	public String editCategorySub(@PathVariable("categoryId") long categoryId, @PathVariable("cateSubId") long cateSubId, ModelMap model) {
+		CategorySub categorySub = categorySubService.findCategorySubById(cateSubId);
+		model.put("categorySub", categorySub);
+		model.put("categoryId", categoryId);
+		model.put("action", "Edit Category sub");
+		model.put("layout", "admin/add_edit_category_sub");
+		return Constants.TEMPLATE_ADMIN;
+	}
+	
+	@RequestMapping(value = "add-new-category-sub/{categoryId}", method = RequestMethod.POST)
+	public String saveCategorySub(@Valid CategorySub categorySub, @PathVariable("categoryId") long categoryId, 
+			BindingResult bindingResult, ModelMap model) {
+		if (bindingResult.hasErrors()) {
+			model.put("action", "Add new Category sub");
+			model.put("layout", "admin/add_edit_category_sub");
+			return Constants.TEMPLATE_ADMIN;
+		}
+		categorySubService.saveCategorySub(categorySub, categoryId);
+		return "redirect:/admin/list-category-sub/" + categoryId + "?success";
 	}
 	
 	@RequestMapping(value = "delete-category-sub", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -140,6 +221,34 @@ public class AdminController extends ShowPage {
 		model = getListItem(pageable, model);
 		model.put("layout", "admin/item_management");
 		return Constants.TEMPLATE_ADMIN;
+	}
+	
+	@RequestMapping(value = "add-new-item", method = RequestMethod.GET)
+	public String addNewItem(Item item, ModelMap model) {
+		model.put("action", "Add new Item");
+		model.put("layout", "admin/add_edit_item");
+		return Constants.TEMPLATE_ADMIN;
+	}
+	
+	@RequestMapping(value = "edit-item/{itemId}", method = RequestMethod.GET)
+	public String editItem(@PathVariable("itemId") long itemId, ModelMap model) {
+		Item item = itemService.findItemById(itemId);
+		model.put("item", item);
+		model.put("action", "Edit Item");
+		model.put("layout", "admin/add_edit_item");
+		return Constants.TEMPLATE_ADMIN;
+	}
+	
+	@RequestMapping(value = "add-new-item", method = RequestMethod.POST)
+	public String saveItem(@Valid Item item, @RequestParam("file") MultipartFile file, BindingResult bindingResult, ModelMap model) {
+		if (bindingResult.hasErrors()) {
+			model.put("action", "Add new Item");
+			model.put("layout", "admin/add_edit_item");
+			return Constants.TEMPLATE_ADMIN;
+		}
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		itemService.saveItem(item, file, auth.getName());
+		return "redirect:/admin/item-management?success";
 	}
 	
 	@RequestMapping(value = "delete-item", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)

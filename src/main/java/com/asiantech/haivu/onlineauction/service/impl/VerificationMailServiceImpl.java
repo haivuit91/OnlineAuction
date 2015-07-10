@@ -1,7 +1,6 @@
 package com.asiantech.haivu.onlineauction.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
@@ -12,7 +11,6 @@ import com.asiantech.haivu.onlineauction.service.VerificationMailService;
 public class VerificationMailServiceImpl implements VerificationMailService {
 
 	@Autowired
-	@Qualifier("mailSender")
 	private MailSender mailSender;
 	
 	private String to = "";

@@ -91,6 +91,17 @@ public class Account {
 		this.verification = verification;
 	}
 
+	public Account(long id, String fullName, Date dateOfBirth, int sex,
+			Status status, Role role) {
+		super();
+		this.id = id;
+		this.fullName = fullName;
+		this.dateOfBirth = dateOfBirth;
+		this.sex = sex;
+		this.status = status;
+		this.role = role;
+	}
+
 	/**
 	 * @param accountName
 	 * @param pwd

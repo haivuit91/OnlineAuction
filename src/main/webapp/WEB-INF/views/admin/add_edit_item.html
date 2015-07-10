@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+	<head>
+	</head>
+	<body>
+		<div class="span10" th:fragment="content">
+			<h2 th:text="${action}">Title</h2>
+			<form role="form" class="form-horizontal"  id="add-edit-item-form" th:object="${item}" th:action="@{/admin/add-new-item}" enctype="multipart/form-data" th:method="post">
+				<fieldset>
+					<legend></legend>
+					<div class="alert alert-danger alert-dismissible fade in" role="alert" th:if="${#fields.hasErrors('*')}">
+						<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+				  			<span aria-hidden="true">&times;</span>
+						</button>
+						<ul>
+				  			<li th:each="err : ${#fields.errors('*')}" th:text="${err}">Input is incorrect</li>
+						</ul>
+					</div>
+					<div class="row">
+						<div class="span5">
+							<input type="hidden" th:field="*{id}" />
+							<div th:class="${#fields.hasErrors('itemTitle')} ? 'form-group has-error' : form-group">
+							 	<label for="itemTitle"><b>Item title</b></label>
+								<input class="form-control" id="itemTitle" th:field="*{itemTitle}" type="text" required="required" placeholder="Item title"/>
+							</div>
+							<div th:class="${#fields.hasErrors('bidStartDate')} ? 'form-group has-error' : form-group">
+								<label for="bidStartDate"><b>Bid start date</b></label>
+								<input class="form-control" id="bidStartDate" th:field="*{bidStartDate}" type="text" readonly="readonly" required="required" placeholder="dd/mm/yyy HH:ii P"/>
+							</div>
+							<div th:class="${#fields.hasErrors('minimumBid')} ? 'form-group has-error' : form-group">
+								<label for="minimumBid"><b>Minimum bid</b></label>
+		       					<input class="form-control" id="minimumBid" th:field="*{minimumBid}" type="number" required="required" placeholder="Minimum bid"/>
+							</div>
+							<div th:class="${#fields.hasErrors('categorySub')} ? 'form-group has-error' : form-group">
+								<label for="categorySub"><b>Category</b></label>
+		       					<select class="form-control" id="categorySub" th:field="*{categorySub}">
+									<option th:each="cateSub : ${allCategorySub}" th:value="${cateSub.id}" th:text="${cateSub.cateSubName}">Category Name</option>
+								</select>
+							</div>
+						</div>
+						<div class="span5">
+							<div class="form-group">
+		        			 	<label for="itemThumbnail"><b>Image</b></label>
+								<input class="form-control" id="itemThumbnail" name="file" type="file" />
+							</div>
+							<div th:class="${#fields.hasErrors('bidEndDate')} ? 'form-group has-error' : form-group">
+								<label for="bidEndDate"><b>Bid end date</b></label>
+		       					<input class="form-control" id="bidEndDate" th:field="*{bidEndDate}" type="text" readonly="readonly" required="required" placeholder="dd/mm/yyy HH:ii P"/>
+							</div>
+							<div th:class="${#fields.hasErrors('bidIncremenent')} ? 'form-group has-error' : form-group">
+								<label for="bidIncremenent"><b>Bid increment</b></label>
+		       					<input class="form-control" id="bidIncremenent" th:field="*{bidIncremenent}" type="number" required="required" placeholder="Bid increment"/>
+							</div>
+							<div th:class="${#fields.hasErrors('bidStatus')} ? 'form-group has-error' : form-group" th:if="${breadcrumbs} == 'Edit item'">
+								<label for="bidStatus"><b>Status</b></label>
+		       					<select class="form-control" id="bidStatus" th:field="*{bidStatus}">
+									<option value="true" >Enable</option>
+									<option value="false" >Disable</option>
+								</select>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="span10">
+							<div th:class="${#fields.hasErrors('itemDesciption')} ? 'form-group has-error' : form-group">
+		       				 	<label for="itemDesciption"><b>Item description</b></label>
+		       				 	<textarea class="form-control" id="itemDesciption" th:field="*{itemDesciption}" rows="10" placeholder="Item name"></textarea>
+							</div>
+							<div class="form-actions">
+								<button type="submit" class="btn btn-primary" th:text="${action} == 'Edit Item' ? Save : Add">Action</button>
+								<button class="btn">Cancel</button>
+							</div>
+						</div>
+					</div>
+				</fieldset>
+			</form>
+			<script type="text/javascript">
+				CKEDITOR.replace('itemDesciption');
+				$(function () {
+					$('#bidStartDate').datetimepicker({
+		                format: "dd/mm/yyyy HH:ii",
+		                autoclose: true,
+		                todayBtn: true,
+		                language: 'en',
+		                minuteStep: 10
+		            });
+		            $('#bidEndDate').datetimepicker({
+		                format: "dd/mm/yyyy HH:ii",
+		                autoclose: true,
+		                todayBtn: true,
+		                language: 'en',
+		                minuteStep: 10
+		            });
+		            $('#bidStartDate').datetimepicker().on('changeDate', function (ev) {
+		                $('#bidEndDate').datetimepicker('setStartDate', ev.date);
+		            });
+		            $('#bidEndDate').datetimepicker().on('changeDate', function (ev) {
+		                $('#bidStartDate').datetimepicker('setEndDate', ev.date);
+		            });
+				});
+			</script>
+		</div>
+	</body>
+</html>

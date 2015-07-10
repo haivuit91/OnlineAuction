@@ -88,7 +88,6 @@ public class RatingServiceImpl implements RatingService {
 
 	@Override
 	public Long deleteRating(Account account) {
-		System.out.println(account.getId());
 		return ratingRepository.deleteByAccount(account);
 	}
 

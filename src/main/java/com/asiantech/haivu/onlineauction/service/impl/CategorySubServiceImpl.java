@@ -60,8 +60,11 @@ public class CategorySubServiceImpl implements CategorySubService {
 
 	@Override
 	@Transactional
-	public CategorySub saveCategorySub(CategorySub categorySub) {
-		return cateSubRepository.save(categorySub);
+	public CategorySub saveCategorySub(CategorySub categorySub, long categoryId) {
+		Category category = categoryService.findCategoryById(categoryId);
+		CategorySub cateSub = new CategorySub(categorySub.getId(), categorySub.getCateSubName(), 
+				categorySub.getCateSubPath(), category);
+		return cateSubRepository.save(cateSub);
 	}
 
 	@Override

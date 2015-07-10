@@ -22,7 +22,7 @@ public interface CategorySubService {
 	
 	List<CategorySub> findCategorySubByCategory(Category category);
 
-	CategorySub saveCategorySub(CategorySub categorySub);
+	CategorySub saveCategorySub(CategorySub categorySub, long categoryId);
 
 	boolean deleteCategorySub(long id);
 	

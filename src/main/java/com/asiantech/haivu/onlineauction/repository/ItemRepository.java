@@ -25,6 +25,10 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
 	
 	List<Item> findByCategorySub(CategorySub categorySub);
 	
+	List<Item> findByAccount(Account account);
+	
 	Long deleteByCategorySub(CategorySub categorySub);
+	
+	Long deleteByAccount(Account account);
 	
 }

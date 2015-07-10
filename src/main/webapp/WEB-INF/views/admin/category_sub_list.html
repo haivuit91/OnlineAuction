@@ -8,7 +8,7 @@
 		<div class="span10" th:fragment="content">
 			<h2>Category sub list</h2>
 			<a class="btn" th:href="@{/admin/category-management}" style="margin-bottom: 20px;"><i class="fa fa-long-arrow-left"></i> Back</a>
-			<a class="btn btn-primary" th:href="@{/admin/add-new-category-sub}" style="margin-bottom: 20px;"><i class="fa fa-plus-circle"></i> Add new Category sub</a>
+			<a class="btn btn-primary" th:href="@{'/admin/add-new-category-sub/' + ${categoryId}}" style="margin-bottom: 20px;"><i class="fa fa-plus-circle"></i> Add new Category sub</a>
 			<table class="table table-bordered table-striped table-category-sub">
 				<thead>
 					<tr>
@@ -24,7 +24,7 @@
 						<td th:text="${categorySub.cateSubName}">Category name</td>
 						<td th:text="${categorySub.cateSubPath}">Category path</td>
 						<td>
-							<a th:href="@{'/admin/edit-category-sub/' + ${categorySub.id}}"><i class="fa fa-pencil-square-o"></i></a>
+							<a th:href="@{'/admin/edit-category-sub/' + ${categoryId} + '/' + ${categorySub.id}}"><i class="fa fa-pencil-square-o"></i></a>
 							<a th:href="@{#}" class="delete-category-sub" th:attr="data-text='Are you sure you want to delete category sub ' + ${categorySub.cateSubName} + '?', data-id=${categorySub.id}"><i class="fa fa-trash-o"></i></a>
 						</td>
 					</tr>

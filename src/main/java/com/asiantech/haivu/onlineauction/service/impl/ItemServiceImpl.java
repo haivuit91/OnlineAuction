@@ -85,6 +85,11 @@ public class ItemServiceImpl implements ItemService {
 	}
 
 	@Override
+	public List<Item> findAllItemByAccount(Account account) {
+		return itemRepository.findByAccount(account);
+	}
+
+	@Override
 	@Transactional
 	public Item saveItem(Item item, MultipartFile file, String email) {
 		String imageName = "default.png";
@@ -112,12 +117,13 @@ public class ItemServiceImpl implements ItemService {
 					item.getBidStartDate(), item.getBidEndDate(), account,
 					item.getCategorySub());
 		} else {
+			Item accItem = itemRepository.findOne(item.getId());
 			itemTmp = new Item(item.getId(), item.getItemTitle(),
 					item.getItemDesciption(), imageName,
 					item.getMinimumBid(), item.getBidIncremenent(),
 					item.getCurrentBid(), item.getBidStartDate(),
 					item.getBidEndDate(), item.getBidCounts(),
-					item.isBidStatus(), account,
+					item.isBidStatus(), accItem.getAccount(),
 					item.getCategorySub());
 		}
 		return itemRepository.save(itemTmp);
@@ -170,6 +176,27 @@ public class ItemServiceImpl implements ItemService {
 					}
 				} else {
 					itemRepository.deleteByCategorySub(categorySub);
+					check = true;
+				}
+			}
+		}
+		return check;
+	}
+
+	@Override
+	public boolean deleteItemByAccount(Account account) {
+		boolean check = false;
+		List<Item> item = itemRepository.findByAccount(account);
+		if (!item.isEmpty()) {
+			for (Item itemList : item) {
+				List<Bid> listBid = bidService.findBidByItem(itemList);
+				if (!listBid.isEmpty()) {
+					if (bidService.deleteBidByItem(itemList) != 0) {
+						itemRepository.deleteByAccount(account);
+						check = true;
+					}
+				} else {
+					itemRepository.deleteByAccount(account);
 					check = true;
 				}
 			}
