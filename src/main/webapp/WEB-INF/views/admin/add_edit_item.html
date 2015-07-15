@@ -64,9 +64,9 @@
 					</div>
 					<div class="row">
 						<div class="span10">
-							<div th:class="${#fields.hasErrors('itemDesciption')} ? 'form-group has-error' : form-group">
-		       				 	<label for="itemDesciption"><b>Item description</b></label>
-		       				 	<textarea class="form-control" id="itemDesciption" th:field="*{itemDesciption}" rows="10" placeholder="Item name"></textarea>
+							<div th:class="${#fields.hasErrors('itemDescription')} ? 'form-group has-error' : form-group">
+		       				 	<label for="itemDescription"><b>Item description</b></label>
+		       				 	<textarea class="form-control" id="itemDescription" th:field="*{itemDescription}" rows="10"></textarea>
 							</div>
 							<div class="form-actions">
 								<button type="submit" class="btn btn-primary" th:text="${action} == 'Edit Item' ? Save : Add">Action</button>
@@ -77,7 +77,7 @@
 				</fieldset>
 			</form>
 			<script type="text/javascript">
-				CKEDITOR.replace('itemDesciption');
+				CKEDITOR.replace('itemDescription');
 				$(function () {
 					$('#bidStartDate').datetimepicker({
 		                format: "dd/mm/yyyy HH:ii",

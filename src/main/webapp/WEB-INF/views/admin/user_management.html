@@ -12,7 +12,6 @@
 				<thead>
 					<tr>
 						<th style="width: 15px;"><input type="checkbox" /></th>
-						<th>User name</th>
 						<th>Full name</th>
 						<th>Email</th>
 						<th>Role</th>
@@ -23,16 +22,13 @@
 				<tbody>
 					<tr th:each="account : ${listAccount.content}">
 						<td><input type="checkbox" /></td>
-						<td>
-							<a th:href="@{#}" th:text="${account.accountName}">Account name</a>
-						</td>
 						<td th:text="${account.fullName}">Full name</td>
 						<td th:text="${account.email}">Email</td>
 						<td th:text="${account.role}">Role</td>
 						<td th:text="${account.status}">Status</td>
 						<td>
 							<a th:href="@{'/admin/edit-user/' + ${account.id}}"><i class="fa fa-pencil-square-o"></i></a>
-							<a th:href="@{#}" class="delete-account" th:attr="data-text='Are you sure you want to delete user ' + ${account.accountName} + '?', data-id=${account.id}"><i class="fa fa-trash-o"></i></a>
+							<a th:href="@{#}" class="delete-account" th:attr="data-text='Are you sure you want to delete user ' + ${account.id} + '?', data-id=${account.id}"><i class="fa fa-trash-o"></i></a>
 						</td>
 					</tr>
 				</tbody>
@@ -73,7 +69,7 @@
 								data: {accountId : accountId},
 								success: function(response) {
 									if(response == true) {
-										alert("Delete user successful.");
+										alert("Delete user successfully.");
 										$this.remove();
 									} else {
 										alert("Delete user fail.");

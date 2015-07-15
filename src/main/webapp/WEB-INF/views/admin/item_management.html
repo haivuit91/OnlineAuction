@@ -35,7 +35,7 @@
 		    			<td th:text="${item.minimumBid}">Minimum Bid</td>
 		    			<td th:text="${item.bidIncremenent}">Bid Incremenent</td>
 		    			<td th:text="${item.bidStatus}">Bid status</td>
-		    			<td th:text="${item.account.accountName}">User</td>
+		    			<td th:text="${item.account.email}">User</td>
 						<td>
 							<a th:href="@{'/admin/edit-item/' + ${item.id}}"><i class="fa fa-pencil-square-o"></i></a>
 							<a th:href="@{#}" class="delete-item" th:attr="data-text='Are you sure you want to delete item ' + ${item.itemTitle} + '?', data-id=${item.id}"><i class="fa fa-trash-o"></i></a>

@@ -51,7 +51,7 @@ public class AuthenticationSuccessHandlerCustom implements
 		}
 
 		if (isUser) {
-			return "/";
+			return "/auctions/all";
 		} else if (isAdmin) {
 			return "/admin/dashboard";
 		} else {

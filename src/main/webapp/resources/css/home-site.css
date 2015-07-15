@@ -718,8 +718,22 @@ a:hover {
 .comment-reply-btn {
   margin-left: 10px;
 }
+.blog-sidebar .update-picture {
+	margin-bottom: 15px;
+}
+.blog-sidebar .update-picture input#upload-avatar {
+	display: none;
+}
+.blog-sidebar .update-picture input#update-profile-picture {
+	width: 100%;
+	text-align: center;
+	color: #000;
+	background: #fff;
+	border: none;
+}
 .blog-sidebar img.avatar {
 	border: 8px solid #FFF;
+	background: #fff;
   width: 100%;
   min-height: 150px;
   -webkit-box-shadow: inset 0 1px #fff,0 0 8px #c8cfe6;

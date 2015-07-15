@@ -30,11 +30,6 @@ public class Account {
 	@Column(name = "id", length = 1000)
 	private long id;
 
-	@Column(name = "account_name", length = 255)
-	@NotNull(message = "The account name is required and can't be empty")
-	@Size(min = 3, message = "The account name must be more than 3 characters long")
-	private String accountName;
-
 	@Column(name = "password", length = 1000)
 	@NotNull(message = "The password is required and can't be empty")
 	@Size(min = 6, message = "The password must be more than 6 characters long")
@@ -56,6 +51,9 @@ public class Account {
 	@Pattern(regexp = "[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}", message = "The input is not a valid email address")
 	private String email;
 
+	@Column(name = "avatar_path", length = 255)
+	private String avatarPath;
+
 	@Column(name = "status", length = 50)
 	@Enumerated(EnumType.STRING)
 	private Status status;
@@ -74,25 +72,23 @@ public class Account {
 		super();
 	}
 
-	public Account(long id, String accountName, String pwd, String fullName,
-			Date dateOfBirth, int sex, String email, Status status, Role role,
-			double trust, String verification) {
+	public Account(long id, String pwd, String fullName, Date dateOfBirth, int sex, String email, 
+			String avatarPath, Status status, Role role, double trust, String verification) {
 		super();
 		this.id = id;
-		this.accountName = accountName;
 		this.pwd = pwd;
 		this.fullName = fullName;
 		this.dateOfBirth = dateOfBirth;
 		this.sex = sex;
 		this.email = email;
+		this.avatarPath = avatarPath;
 		this.status = status;
 		this.role = role;
 		this.trust = trust;
 		this.verification = verification;
 	}
 
-	public Account(long id, String fullName, Date dateOfBirth, int sex,
-			Status status, Role role) {
+	public Account(long id, String fullName, Date dateOfBirth, int sex, Status status, Role role) {
 		super();
 		this.id = id;
 		this.fullName = fullName;
@@ -103,7 +99,6 @@ public class Account {
 	}
 
 	/**
-	 * @param accountName
 	 * @param pwd
 	 * @param fullName
 	 * @param email
@@ -111,10 +106,8 @@ public class Account {
 	 * 
 	 * Create new Account with role USER
 	 */
-	public Account(String accountName, String pwd, String fullName,
-			String email, String verification) {
-		this(0, accountName, pwd, fullName, null, 0, email, Status.DISABLE,
-				Role.ROLE_USER, 0, verification);
+	public Account(String pwd, String fullName, String email, String verification) {
+		this(0, pwd, fullName, null, 0, email, null, Status.DISABLE, Role.ROLE_USER, 0, verification);
 	}
 	
 	/**
@@ -127,10 +120,8 @@ public class Account {
 	 * 
 	 * Create new Account by Admin
 	 */
-	public Account(String accountName, String pwd, String fullName,
-			String email, Role role, String verification) {
-		this(0, accountName, pwd, fullName, null, 0, email, Status.DISABLE,
-				role, 0, verification);
+	public Account(String pwd, String fullName, String email, Role role, String verification) {
+		this(0, pwd, fullName, null, 0, email, null, Status.DISABLE, role, 0, verification);
 	}
 	
 	public long getId() {
@@ -139,14 +130,6 @@ public class Account {
 
 	public void setId(long id) {
 		this.id = id;
-	}
-
-	public String getAccountName() {
-		return accountName;
-	}
-
-	public void setAccountName(String accountName) {
-		this.accountName = accountName;
 	}
 
 	public String getPwd() {
@@ -187,6 +170,14 @@ public class Account {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	public String getAvatarPath() {
+		return avatarPath;
+	}
+
+	public void setAvatarPath(String avatarPath) {
+		this.avatarPath = avatarPath;
 	}
 
 	public Status getStatus() {

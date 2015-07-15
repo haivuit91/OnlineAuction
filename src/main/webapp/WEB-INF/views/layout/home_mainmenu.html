@@ -14,7 +14,7 @@
 						<ul>
 			        		<li sec:authorize="isAnonymous()" ><a th:href="@{/account/register}">Register</a></li>
 			        		<li sec:authorize="isAnonymous()" ><a th:href="@{/account/login}">Login</a></li>
-			        		<li sec:authorize="isAuthenticated()">Welcome <a th:href="@{'/user/' + ${session.sessionAccName}}" sec:authentication="name">User name</a></li>
+			        		<li sec:authorize="isAuthenticated()">Welcome <a th:href="@{/user/setting}" sec:authentication="name">User name</a></li>
 			        		<li sec:authorize="isAuthenticated()"><a th:href="@{/account/logout}" class="logout">Logout</a></li>
 			        	</ul>
 					</div>

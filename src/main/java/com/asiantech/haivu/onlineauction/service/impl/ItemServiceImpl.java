@@ -71,7 +71,7 @@ public class ItemServiceImpl implements ItemService {
 	public Page<Item> findItemByCategorySub(String cateSubPath, Pageable pageable) {
 		Pageable page = PageAbleCommon.customePageable(pageable);
 		CategorySub categorySub = categorySubService.findCategorySubByPath(cateSubPath);
-		return itemRepository.findByCategorySubAndBidStartDateBeforeAndBidEndDateAfter(categorySub, new Date(), new Date(), page);
+		return itemRepository.findByCategorySubAndBidStartDateBeforeAndBidEndDateAfterAndBidStatus(categorySub, new Date(), new Date(), true, page);
 	}
 
 	@Override
@@ -112,14 +112,14 @@ public class ItemServiceImpl implements ItemService {
 	private Item actionSave(boolean edit, Item item, String imageName, Account account) {
 		Item itemTmp;
 		if (!edit) {
-			itemTmp = new Item(item.getItemTitle(), item.getItemDesciption(),
+			itemTmp = new Item(item.getItemTitle(), item.getItemDescription(),
 					imageName, item.getMinimumBid(), item.getBidIncremenent(),
-					item.getBidStartDate(), item.getBidEndDate(), account,
+					item.getBidStartDate(), item.getBidEndDate(), item.isBidStatus(), account,
 					item.getCategorySub());
 		} else {
 			Item accItem = itemRepository.findOne(item.getId());
 			itemTmp = new Item(item.getId(), item.getItemTitle(),
-					item.getItemDesciption(), imageName,
+					item.getItemDescription(), imageName,
 					item.getMinimumBid(), item.getBidIncremenent(),
 					item.getCurrentBid(), item.getBidStartDate(),
 					item.getBidEndDate(), item.getBidCounts(),
@@ -134,7 +134,7 @@ public class ItemServiceImpl implements ItemService {
 	public Item updateCurrentBidItem(Item item, double currentBid) {
 		int count = item.getBidCounts() + 1;
 		Item updateItem = new Item(item.getId(), item.getItemTitle(),
-				item.getItemDesciption(), item.getItemThumbnail(),
+				item.getItemDescription(), item.getItemThumbnail(),
 				item.getMinimumBid(), item.getBidIncremenent(), currentBid,
 				item.getBidStartDate(), item.getBidEndDate(), count,
 				item.isBidStatus(), item.getAccount(), item.getCategorySub());

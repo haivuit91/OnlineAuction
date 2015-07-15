@@ -20,8 +20,8 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
 	
 	Page<Item> findByBidStatusAndBidEndDateBefore(boolean bidStatus, Date bidEndDate, Pageable pageable);
 
-	Page<Item> findByCategorySubAndBidStartDateBeforeAndBidEndDateAfter(CategorySub categorySub, Date bidStartDate, 
-			Date bidEndDate, Pageable pageable);
+	Page<Item> findByCategorySubAndBidStartDateBeforeAndBidEndDateAfterAndBidStatus(CategorySub categorySub, Date bidStartDate, 
+			Date bidEndDate, boolean bidStatus, Pageable pageable);
 	
 	List<Item> findByCategorySub(CategorySub categorySub);
 	

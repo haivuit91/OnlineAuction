@@ -62,12 +62,8 @@
 								<li><a href="#tab2" data-toggle="tab">Pictures</a></li>
 							</ul>
 							<div class="tab-content product-detail-info">
-								<div class="tab-pane active" id="tab1">
-									<h4>Product Description</h4>
-									<p>muahaaaaa</p>
-								</div>
+								<div class="tab-pane active" id="tab1" th:remove="tag" th:utext="${item.itemDescription}">Item Description</div>
 								<div class="tab-pane" id="tab2">
-									ssd
 								</div>
 							</div>
 						</div>

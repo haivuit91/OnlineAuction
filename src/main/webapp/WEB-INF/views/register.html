@@ -8,7 +8,7 @@
 		<div class="section" th:fragment="content">
 	    	<div class="container">
 				<div class="row">
-					<div class="col-sm-5 login-center">
+					<div class="col-sm-6 col-sm-offset-3">
 						<div class="alert alert-danger alert-dismissible fade in" role="alert" th:if="${registerError}">
 							<button type="button" class="close" data-dismiss="alert" aria-label="Close">
 						  		<span aria-hidden="true">&times;</span>
@@ -17,10 +17,6 @@
 						</div>
 						<div class="basic-login">
 							<form role="form" id="register-form" th:object="${account}" th:action="@{/account/register}" th:method="post">
-								<div th:class="${#fields.hasErrors('accountName')} ? 'form-group has-error' : (${registerErrorAccName} ? 'form-group has-error' : form-group)">
-		        				 	<label for="accountName"><b>Account Name</b></label>
-									<input class="form-control" id="accountName" th:field="*{accountName}" type="text" required="required" placeholder="Account name"/>
-								</div>
 								<div th:class="${#fields.hasErrors('fullName')} ? 'form-group has-error' : form-group">
 		        				 	<label for="fullName"><b>Full Name</b></label>
 									<input class="form-control" id="fullName" th:field="*{fullName}" type="text" required="required" placeholder="Full name"/>

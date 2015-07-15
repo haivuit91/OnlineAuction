@@ -26,8 +26,8 @@ public class Item {
 	@NotNull(message = "The item title is required and can't be empty")
 	private String itemTitle;
 
-	@Column(name = "item_desciption", length = 4000)
-	private String itemDesciption;
+	@Column(name = "item_description", length = 4000)
+	private String itemDescription;
 
 	@Column(name = "item_thumbnail_name", length = 255)
 	private String itemThumbnail;
@@ -69,14 +69,14 @@ public class Item {
 		super();
 	}
 
-	public Item(long id, String itemTitle, String itemDesciption,
+	public Item(long id, String itemTitle, String itemDescription,
 			String itemThumbnail, double minimumBid, double bidIncremenent,
 			double currentBid, Date bidStartDate, Date bidEndDate, int bidCounts,
 			boolean bidStatus, Account account, CategorySub categorySub) {
 		super();
 		this.id = id;
 		this.itemTitle = itemTitle;
-		this.itemDesciption = itemDesciption;
+		this.itemDescription = itemDescription;
 		this.itemThumbnail = itemThumbnail;
 		this.minimumBid = minimumBid;
 		this.bidIncremenent = bidIncremenent;
@@ -91,7 +91,7 @@ public class Item {
 
 	/**
 	 * @param itemTitle
-	 * @param itemDesciption
+	 * @param itemDescription
 	 * @param itemThumbnail
 	 * @param minimumBid
 	 * @param bidIncremenent
@@ -101,11 +101,11 @@ public class Item {
 	 * 
 	 * Create new item
 	 */
-	public Item(String itemTitle, String itemDesciption, String itemThumbnail,
+	public Item(String itemTitle, String itemDescription, String itemThumbnail,
 			double minimumBid, double bidIncremenent, Date bidStartDate,
-			Date bidEndDate, Account account, CategorySub categorySub) {
-		this(0, itemTitle, itemDesciption, itemThumbnail, minimumBid,
-				bidIncremenent, minimumBid, bidStartDate, bidEndDate, 0, true,
+			Date bidEndDate, boolean bidStatus, Account account, CategorySub categorySub) {
+		this(0, itemTitle, itemDescription, itemThumbnail, minimumBid,
+				bidIncremenent, minimumBid, bidStartDate, bidEndDate, 0, bidStatus,
 				account, categorySub);
 	}
 
@@ -116,7 +116,7 @@ public class Item {
 	 * Update current bid Item
 	 */
 	public Item(Item item, double currentBid) {
-		this(item.getId(), item.itemTitle, item.getItemDesciption(), item
+		this(item.getId(), item.itemTitle, item.getItemDescription(), item
 				.getItemThumbnail(), item.getMinimumBid(), item
 				.getBidIncremenent(), currentBid, item.getBidStartDate(), item
 				.getBidEndDate(), item.getBidCounts(), item.isBidStatus(), item.account,
@@ -139,12 +139,12 @@ public class Item {
 		this.itemTitle = itemTitle;
 	}
 
-	public String getItemDesciption() {
-		return itemDesciption;
+	public String getItemDescription() {
+		return itemDescription;
 	}
 
-	public void setItemDesciption(String itemDesciption) {
-		this.itemDesciption = itemDesciption;
+	public void setItemDescription(String itemDescription) {
+		this.itemDescription = itemDescription;
 	}
 
 	public String getItemThumbnail() {

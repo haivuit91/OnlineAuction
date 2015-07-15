@@ -9,8 +9,6 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
 
 	Account findByEmailAndStatus(String email, Status status);
 
-	Account findByAccountName(String accountName);
-
 	Account findByEmail(String email);
 	
 	Account findByIdAndVerification(long accountId, String verification);

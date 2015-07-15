@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org" lang="en"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+	<head>
+	</head>
+	<body>
+		<div class="section" th:fragment="content">
+			<div class="container">
+				<div class="row">
+					<div th:replace="layout/home_sidebar :: sidebar">Sidebar</div>
+					<div class="col-sm-10">
+						<div class="blog-post blog-single-post">
+							<h2>Your Infomation</h2>
+							<div class="row">
+								<div class="col-sm-12">
+								info
+								</div>
+							</div>
+							<h2>Change Password</h2>
+							<div class="row">
+								<div class="col-sm-6 col-sm-offset-3">
+									<div th:class="${success} ? 'alert alert-success alert-dismissible fade in' : 'alert alert-danger alert-dismissible fade in'" role="alert" th:if="${changePwd}">
+										<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+									  		<span aria-hidden="true">&times;</span>
+										</button>
+										<span th:text="${message}">Message</span>
+									</div>
+									<form role="form" id="change-pwd-form" th:action="@{/user/change-password}" th:method="post">
+										<div th:class="${errorCurrentPwd} ? 'form-group has-error' : form-group">
+				        				 	<label for="restore-email"><b>Current password</b></label>
+											<input class="form-control" id="current-password" name="currentPwd" type="password" placeholder="Current password" />
+										</div>
+										<div class="form-group">
+				        				 	<label for="restore-email"><b>New password</b></label>
+											<input class="form-control" id="new-password" name="newPwd" type="password" placeholder="New password" />
+										</div>
+										<div th:class="${errorRePwd} ? 'form-group has-error' : form-group">
+				        				 	<label for="restore-email"><b>Re-enter Password</b></label>
+											<input class="form-control" id="re-password" name="rePwd" type="password" placeholder="Re-enter Password" />
+										</div>
+										<div class="form-group">
+											<button type="submit" class="btn pull-right" >Change</button>
+											<div class="clearfix"></div>
+										</div>
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

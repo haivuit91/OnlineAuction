@@ -15,12 +15,6 @@
 					</ul>
 					<input type="hidden" class="input-xlarge" id="id" th:field="*{id}" />
 					<input type="hidden" class="input-xlarge" id="pwd" th:field="*{pwd}" />
-					<div th:class="${#fields.hasErrors('accountName')} ? 'control-group has-error' : control-group">
-						<label class="control-label" for="accountName">User name</label>
-						<div class="controls">
-							<input type="text" class="input-xlarge" th:readonly="${action} == 'Edit User' ? true : false" id="accountName" th:field="*{accountName}" />
-						</div>
-					</div>
 					<div th:class="${#fields.hasErrors('fullName')} ? 'control-group has-error' : control-group">
 						<label class="control-label" for="fullName">Full name</label>
 						<div class="controls">

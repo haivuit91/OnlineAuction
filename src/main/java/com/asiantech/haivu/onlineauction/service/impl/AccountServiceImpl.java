@@ -17,6 +17,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.asiantech.haivu.onlineauction.common.PageAbleCommon;
 import com.asiantech.haivu.onlineauction.enums.Role;
@@ -29,6 +30,7 @@ import com.asiantech.haivu.onlineauction.service.AccountService;
 import com.asiantech.haivu.onlineauction.service.ItemService;
 import com.asiantech.haivu.onlineauction.service.RatingService;
 import com.asiantech.haivu.onlineauction.service.VerificationMailService;
+import com.asiantech.haivu.onlineauction.util.HandleImage;
 import com.asiantech.haivu.onlineauction.util.Support;
 
 @Service(AccountService.NAME)
@@ -42,6 +44,9 @@ public class AccountServiceImpl implements AccountService {
 	
 	@Autowired
 	private ItemService itemService;
+	
+	@Autowired
+	private HandleImage handleImg;
 
 	@Autowired
 	private VerificationMailService verificationMailSv;
@@ -82,11 +87,6 @@ public class AccountServiceImpl implements AccountService {
 	}
 
 	@Override
-	public Account findAccountByAccountName(String accountName) {
-		return accountRepository.findByAccountName(accountName);
-	}
-
-	@Override
 	public Account findAccountByEmail(String email) {
 		return accountRepository.findByEmail(email);
 	}
@@ -96,8 +96,7 @@ public class AccountServiceImpl implements AccountService {
 	public Account userRegister(Account account) {
 		String pwd = passwordEncoder.encode(account.getPwd());
 		String verifyCode = support.randomString(30);
-		Account acc = new Account(account.getAccountName(), pwd,
-				account.getFullName(), account.getEmail(), verifyCode);
+		Account acc = new Account(pwd, account.getFullName(), account.getEmail(), verifyCode);
 		Account accountVerify = accountRepository.save(acc);
 		if(accountVerify != null) {
 			String verifyLink = "http://localhost:8081/OnlineAuction/account/verify-email?uid=" + accountVerify.getId() + "&code=" + verifyCode;
@@ -115,8 +114,8 @@ public class AccountServiceImpl implements AccountService {
 			return saveNewAccount(account);
 		}
 		Account acc = accountRepository.findOne(account.getId());
-		Account newAccount = new Account(account.getId(), acc.getAccountName(), acc.getPwd(), account.getFullName(), 
-				account.getDateOfBirth(), account.getSex(), acc.getEmail(), account.getStatus(), account.getRole(), 
+		Account newAccount = new Account(account.getId(), acc.getPwd(), account.getFullName(), 
+				account.getDateOfBirth(), account.getSex(), acc.getEmail(), acc.getAvatarPath(), account.getStatus(), account.getRole(), 
 				acc.getTrust(), acc.getVerification());
 		return accountRepository.save(newAccount);
 	}
@@ -136,11 +135,28 @@ public class AccountServiceImpl implements AccountService {
 	}
 
 	@Override
+	public boolean changePassword(String currentPwd, String newPwd, String email) {
+		boolean check = false;
+		Account acc = accountRepository.findByEmail(email);
+		if(acc != null) {
+			if(passwordEncoder.matches(currentPwd, acc.getPwd())) {
+				String password = passwordEncoder.encode(newPwd);
+				Account accSave = new Account(acc.getId(), password, acc.getFullName(), acc.getDateOfBirth(), 
+						acc.getSex(), acc.getEmail(), acc.getAvatarPath(), acc.getStatus(), acc.getRole(), 
+						acc.getTrust(), acc.getVerification());
+				accountRepository.save(accSave);
+				check = true;
+			}
+		}
+		return check;
+	}
+
+	@Override
 	@Transactional
 	public boolean updateTrustAccount(double trust, Account account) {
-		Account acc = new Account(account.getId(), account.getAccountName(),
-				account.getPwd(), account.getFullName(),
-				account.getDateOfBirth(), account.getSex(), account.getEmail(),
+		Account acc = new Account(account.getId(), account.getPwd(),
+				account.getFullName(), account.getDateOfBirth(),
+				account.getSex(), account.getEmail(), account.getAvatarPath(),
 				account.getStatus(), account.getRole(), trust,
 				account.getVerification());
 		boolean check = accountRepository.save(acc) != null ? true : false;
@@ -153,8 +169,10 @@ public class AccountServiceImpl implements AccountService {
 		boolean check = false;
 		Account account = accountRepository.findByIdAndVerification(accountId, verification);
 		if(account != null) {
-			Account acc = new Account(account.getId(), account.getAccountName(), account.getPwd(), account.getFullName(), 
-					account.getDateOfBirth(), account.getSex(), account.getEmail(), Status.ENABLE, account.getRole(), 
+			Account acc = new Account(account.getId(), account.getPwd(),
+					account.getFullName(), account.getDateOfBirth(),
+					account.getSex(), account.getEmail(),
+					account.getAvatarPath(), Status.ENABLE, account.getRole(),
 					account.getTrust(), "0");
 			Account checkAccount = accountRepository.save(acc);
 			if(checkAccount != null) {
@@ -190,7 +208,7 @@ public class AccountServiceImpl implements AccountService {
 		String randomPwd = support.randomString(6);
 		String verifyCode = support.randomString(30);
 		String pwd = passwordEncoder.encode(randomPwd);
-		Account acc = new Account(account.getAccountName(), pwd, account.getFullName(), account.getEmail(), account.getRole(), verifyCode);
+		Account acc = new Account(pwd, account.getFullName(), account.getEmail(), account.getRole(), verifyCode);
 		Account accountConfirm = accountRepository.save(acc);
 		if(accountConfirm != null) {
 			String verifyLink = "Pass: " + randomPwd + ", http://localhost:8081/OnlineAuction/account/verify-email?uid=" + accountConfirm.getId() + "&code=" + verifyCode;
@@ -199,6 +217,46 @@ public class AccountServiceImpl implements AccountService {
 		    t.start();
 		}
 		return accountConfirm;
+	}
+
+	@Override
+	public boolean resetPassword(String email) {
+		boolean check = false;
+		Account acc = accountRepository.findByEmail(email);
+		if(acc != null) {
+			String randomPwd = support.randomString(6);
+			String pwd = passwordEncoder.encode(randomPwd);
+			Account accSave = new Account(acc.getId(), pwd, acc.getFullName(), acc.getDateOfBirth(), 
+					acc.getSex(), acc.getEmail(), acc.getAvatarPath(), acc.getStatus(), acc.getRole(), 
+					acc.getTrust(), acc.getVerification());
+			Account accountConfirm = accountRepository.save(accSave);
+			if(accountConfirm != null) {
+				check = true;
+				String verifyLink = "Pass: " + randomPwd;
+				verificationMailSv.verifyEmail(accountConfirm.getEmail(), "Verify your account", verifyLink);
+				Thread t = new Thread(verificationMailSv);
+			    t.start();
+			}
+		}
+		return check;
+	}
+
+	@Override
+	public boolean changeAvatar(MultipartFile file, String email) {
+		boolean check = false;
+		String avatarName = "avatar.png";
+		Account account = accountRepository.findByEmail(email);
+		if(account != null) {
+			if (handleImg.uploadFileHandler(file)) {
+				avatarName = file.getOriginalFilename();
+			}
+			Account acc = new Account(account.getId(), account.getPwd(), account.getFullName(), account.getDateOfBirth(), 
+					account.getSex(), account.getEmail(), avatarName, account.getStatus(), account.getRole(), 
+					account.getTrust(), account.getVerification());
+			accountRepository.save(acc);
+			check = true;
+		}
+		return check;
 	}
 
 }

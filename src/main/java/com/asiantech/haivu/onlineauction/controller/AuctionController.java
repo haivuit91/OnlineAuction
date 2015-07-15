@@ -1,22 +1,16 @@
 package com.asiantech.haivu.onlineauction.controller;
 
-import javax.servlet.http.HttpSession;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.asiantech.haivu.onlineauction.model.Account;
 import com.asiantech.haivu.onlineauction.model.CategorySub;
 import com.asiantech.haivu.onlineauction.model.Item;
 import com.asiantech.haivu.onlineauction.service.AccountService;
@@ -39,13 +33,7 @@ public class AuctionController extends ShowPage {
 
 	@RequestMapping(value = "all")
 	public String goAuctionListPage(
-			@PageableDefault(page = 1, size = 5, sort = "id", direction = Direction.DESC) Pageable pageable,
-			HttpSession session, ModelMap model) {
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		if (!(auth instanceof AnonymousAuthenticationToken)) {
-			Account account = accountSv.findAccountByEmail(auth.getName());
-			session.setAttribute("sessionAccName", account.getAccountName());
-		}
+			@PageableDefault(page = 1, size = 5, sort = "id", direction = Direction.DESC) Pageable pageable, ModelMap model) {
 		Page<Item> item = itemSv.findItemByBidStatusAndBidStartDateAndBidEndDate(pageable);
 		model.put("listItem", item);
 		model = showHomePage("All", "auction/auction_list", model);

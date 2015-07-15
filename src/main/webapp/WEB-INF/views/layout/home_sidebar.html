@@ -8,16 +8,53 @@
 	</head>
 	<body>
 		<div class="col-sm-2 blog-sidebar" th:fragment="sidebar">
-			<img class="avatar" th:src="@{/image/qrcode_1430418548.png}" th:alt="${session.sessionAccName}" />
-			<h4 style="text-align: center; text-transform: uppercase;"><a th:href="@{'/user/' + ${session.sessionAccName}}" th:text="${session.sessionAccName}">Account name</a></h4>
+			<div class="update-picture">
+			<form th:method="post" enctype="multipart/form-data" >
+				<img class="avatar" id="show-avatar"  th:src="@{'/image/' + ${accountInfo.avatarPath}}" alt="Avatar" />
+				<input type="file" id="upload-avatar" name="file" onchange="loadFile(event)" />
+				<input id="update-profile-picture" type="button" value="Update profile picture..." onclick="document.getElementById('upload-avatar').click();" />
+				<input type="submit" id="submit" value="Save" style="display: none;"/>
+			</form>
+			</div>
 			<ul class="blog-categories">
 				<li>
 					<a th:href="@{#}">Notification</a>
 					<span class="badge" style="margin-left: 7px;">0</span>
 				</li>
-				<li><a th:href="@{#}">Change password</a></li>
+				<li><a th:href="@{/user/setting}">Setting</a></li>
+				<li><a th:href="@{/user/profile}">Profile</a></li>
 				<li><a th:href="@{/item/list}">Item management</a></li>
 			</ul>
+			<script type="text/javascript">
+				var loadFile = function(event) {
+					$('#submit').show();
+				    var reader = new FileReader();
+				    reader.onload = function(){
+				    	var output = document.getElementById('show-avatar');
+				    	output.src = reader.result;
+				    };
+				    reader.readAsDataURL(event.target.files[0]);
+				};
+				$('#submit').click(function() {
+					var formData = new FormData($('form')[0]);
+					$.ajax({
+						url : 'change-avatar',
+						data : formData,
+						dataType : 'text',
+						processData : false,
+						contentType : false,
+						type : 'POST',
+						success : function(response) {
+							$('#submit').hide();
+							if(response == true) {
+								alert("Change avatar successfully.");
+							} else {
+								alert("Change avatar fail.");
+							};
+						}
+					});
+				});
+			</script>
 		</div>
 	</body>
 </html>

@@ -34,10 +34,9 @@ public class AccountController extends ShowPage {
 
 	@RequestMapping(value = "login", method = RequestMethod.GET)
 	public String goLoginPage(Account account, ModelMap model) {
-		Authentication auth = SecurityContextHolder.getContext()
-				.getAuthentication();
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		if (!(auth instanceof AnonymousAuthenticationToken)) {
-			return "redirect:/auctions/list";
+			return determineTargetUrl(auth);
 		}
 		model = showHomePage("Login", "login", model);
 		return Constants.TEMPLATE_HOME;
@@ -59,12 +58,7 @@ public class AccountController extends ShowPage {
 			model = showHomePage("Register", "register", model);
 			return Constants.TEMPLATE_HOME;
 		}
-		if (accountService.findAccountByAccountName(account.getAccountName()) != null) {
-			model.put("registerError", true);
-			model.put("registerErrorAccName", true);
-			model.put("registerErrorMsg",
-					"Account name is invalid or already taken.");
-		} else if (accountService.findAccountByEmail(account.getEmail()) != null) {
+		if (accountService.findAccountByEmail(account.getEmail()) != null) {
 			model.put("registerError", true);
 			model.put("registerErrorEmail", true);
 			model.put("registerErrorMsg", "Email is invalid or already taken.");
@@ -78,6 +72,22 @@ public class AccountController extends ShowPage {
 			return "redirect:/account/successful";
 		}
 		model = showHomePage("Register", "register", model);
+		return Constants.TEMPLATE_HOME;
+	}
+	
+	@RequestMapping(value = "password-reset", method = RequestMethod.GET)
+	public String goPwdResetPage(ModelMap model) {
+		model = showHomePage("Password Reset", "password_reset", model);
+		return Constants.TEMPLATE_HOME;
+	}
+	
+	@RequestMapping(value = "password-reset", method = RequestMethod.POST)
+	public String pwdReset(@RequestParam("email") String email, ModelMap model) {
+		if(accountService.resetPassword(email)) {
+			return "redirect:/account/successful";
+		}
+		model.put("error", true);
+		model = showHomePage("Password Reset", "password_reset", model);
 		return Constants.TEMPLATE_HOME;
 	}
 
