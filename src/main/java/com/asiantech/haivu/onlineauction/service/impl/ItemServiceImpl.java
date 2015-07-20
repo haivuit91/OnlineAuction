@@ -90,6 +90,11 @@ public class ItemServiceImpl implements ItemService {
 	}
 
 	@Override
+	public List<Item> findItemListStop() {
+		return itemRepository.findByBidStatusAndBidEndDateBefore(true, new Date());
+	}
+
+	@Override
 	@Transactional
 	public Item saveItem(Item item, MultipartFile file, String email) {
 		String imageName = "default.png";
@@ -121,8 +126,8 @@ public class ItemServiceImpl implements ItemService {
 			itemTmp = new Item(item.getId(), item.getItemTitle(),
 					item.getItemDescription(), imageName,
 					item.getMinimumBid(), item.getBidIncremenent(),
-					item.getCurrentBid(), item.getBidStartDate(),
-					item.getBidEndDate(), item.getBidCounts(),
+					accItem.getCurrentBid(), item.getBidStartDate(),
+					item.getBidEndDate(), accItem.getBidCounts(),
 					item.isBidStatus(), accItem.getAccount(),
 					item.getCategorySub());
 		}
@@ -138,6 +143,17 @@ public class ItemServiceImpl implements ItemService {
 				item.getMinimumBid(), item.getBidIncremenent(), currentBid,
 				item.getBidStartDate(), item.getBidEndDate(), count,
 				item.isBidStatus(), item.getAccount(), item.getCategorySub());
+		return itemRepository.save(updateItem);
+	}
+
+	@Override
+	@Transactional
+	public Item disableBidStatus(Item item) {
+		Item updateItem = new Item(item.getId(), item.getItemTitle(),
+				item.getItemDescription(), item.getItemThumbnail(),
+				item.getMinimumBid(), item.getBidIncremenent(), item.getCurrentBid(),
+				item.getBidStartDate(), item.getBidEndDate(), item.getBidCounts(),
+				false, item.getAccount(), item.getCategorySub());
 		return itemRepository.save(updateItem);
 	}
 

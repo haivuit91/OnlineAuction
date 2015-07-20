@@ -2,12 +2,15 @@ package com.asiantech.haivu.onlineauction.controller;
 
 import java.util.Iterator;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -15,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import com.asiantech.haivu.onlineauction.model.Account;
 import com.asiantech.haivu.onlineauction.service.AccountService;
 import com.asiantech.haivu.onlineauction.util.Constants;
 
@@ -27,14 +31,19 @@ public class UserController extends ShowPage {
 
 	@RequestMapping(value = "setting")
 	public String goSettingPage(ModelMap model) {
-		model = showHomePage("Account Setting", "user/setting", model);
+		model = showUserPage("Account Setting", "user/setting", model);
 		return Constants.TEMPLATE_HOME;
 	}
 	
-	@RequestMapping(value = "profile")
-	public String goProfilePage(ModelMap model) {
-		model = showHomePage("Your Profile", "user/profile", model);
-		return Constants.TEMPLATE_HOME;
+	@RequestMapping(value = "change-information", method = RequestMethod.POST)
+	public String saveUser(@Valid Account accountInfo, BindingResult bindingResult, ModelMap model) {
+		if (bindingResult.hasErrors()) {
+			model.put("layout", "user/setting");
+			return Constants.TEMPLATE_HOME;
+		}
+		// Account accountEntity = mapper.map(account, Account.class);
+		accountService.changeInfoAccount(accountInfo);
+		return "redirect:/user/setting";
 	}
 	
 	@RequestMapping(value = "change-password", method = RequestMethod.POST)
@@ -54,7 +63,7 @@ public class UserController extends ShowPage {
 		}
 		model.put("changePwd", true);
 		model.put("message", msg);
-		model = showHomePage("Account Setting", "user/setting", model);
+		model = showUserPage("Account Setting", "user/setting", model);
 		return Constants.TEMPLATE_HOME;
 	}
 	

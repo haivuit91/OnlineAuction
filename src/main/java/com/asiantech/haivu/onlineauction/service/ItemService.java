@@ -30,9 +30,13 @@ public interface ItemService {
 	
 	List<Item> findAllItemByAccount(Account account);
 	
+	List<Item> findItemListStop();
+	
 	Item saveItem(Item item, MultipartFile file, String email);
 	
 	Item updateCurrentBidItem(Item item, double currentBid);
+	
+	Item disableBidStatus(Item item);
 
 	boolean deleteItem(long id);
 	

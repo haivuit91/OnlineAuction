@@ -794,6 +794,7 @@ a:hover {
 }
 .shop-item .title {
   padding: 20px 0 10px;
+  min-height: 80px;
 }
 .shop-item .title h3 {
   font-size: 1em;

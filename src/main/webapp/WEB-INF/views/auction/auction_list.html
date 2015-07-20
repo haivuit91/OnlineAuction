@@ -123,9 +123,9 @@
 						url: "../bid/accept-bid",
 						data: {price : price, itemId : itemId},
 						success: function(response) {
-							var msg = 'You bid fail.';
+							var msg = "You can't bid your product.";
 							if(response == true) {
-								msg = 'You bid successful';
+								msg = "You bid successful";
 							};
 							alert(msg);
 						},

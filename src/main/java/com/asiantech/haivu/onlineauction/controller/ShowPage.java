@@ -59,6 +59,19 @@ public class ShowPage {
 	}
 
 	public ModelMap showHomePage(String breadcrumbs, String layout, ModelMap model) {
+		// Get list Category
+		List<Category> listCategory = categoryService.findAllCategory();
+		// Get list CategorySub
+		List<CategorySub> listCategorySub = categorySubService.findAllCategorySub();
+		// Set object view
+		model.put("listCate", listCategory);
+		model.put("listCateSub", listCategorySub);
+		model.put("layout", layout);
+		model.put("breadcrumbs", breadcrumbs);
+		return model;
+	}
+	
+	public ModelMap showUserPage(String breadcrumbs, String layout, ModelMap model) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		// Get list Category
 		List<Category> listCategory = categoryService.findAllCategory();

@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.asiantech.haivu.onlineauction.model.CategorySub;
 import com.asiantech.haivu.onlineauction.model.Item;
-import com.asiantech.haivu.onlineauction.service.AccountService;
 import com.asiantech.haivu.onlineauction.service.CategorySubService;
 import com.asiantech.haivu.onlineauction.service.ItemService;
 import com.asiantech.haivu.onlineauction.util.Constants;
@@ -22,9 +21,6 @@ import com.asiantech.haivu.onlineauction.util.Constants;
 @RequestMapping("/auctions/")
 public class AuctionController extends ShowPage {
 
-	@Autowired
-	private AccountService accountSv;
-	
 	@Autowired
 	private CategorySubService categorySubSv;
 

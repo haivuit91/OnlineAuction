@@ -15,8 +15,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.asiantech.haivu.onlineauction.model.Account;
 import com.asiantech.haivu.onlineauction.service.AccountService;
-import com.asiantech.haivu.onlineauction.service.CategoryService;
-import com.asiantech.haivu.onlineauction.service.CategorySubService;
 import com.asiantech.haivu.onlineauction.util.Constants;
 
 @Controller
@@ -25,12 +23,6 @@ public class AccountController extends ShowPage {
 
 	@Autowired
 	private AccountService accountService;
-
-	@Autowired
-	private CategoryService categorySv;
-
-	@Autowired
-	private CategorySubService categorySubSv;
 
 	@RequestMapping(value = "login", method = RequestMethod.GET)
 	public String goLoginPage(Account account, ModelMap model) {

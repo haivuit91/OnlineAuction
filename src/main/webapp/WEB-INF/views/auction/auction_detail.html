@@ -149,9 +149,9 @@
 						url: "../../bid/accept-bid",
 						data: {price : price, itemId : itemId},
 						success: function(response) {
-							var msg = 'You bid fail.';
+							var msg = "You can't bid your product.";
 							if(response == true) {
-								msg = 'You bid successful';
+								msg = "You bid successful.";
 							};
 							alert(msg);
 						},
@@ -172,9 +172,9 @@
 									url: "../../rating/rating",
 									data: {point : value, accountId : accountId},
 									success: function(response) {
-										var msg = 'You rating successful.';
+										var msg = "You rating successful.";
 										if(response == false) {
-											msg = 'You rating fail.';
+											msg = "You can't rating your account.";
 											$('#rating').rating('reset');
 										};
 										alert(msg);

@@ -71,10 +71,7 @@
 		<property name="characterEncoding" value="UTF-8" />
 	</bean>
 
-	<bean id="multipartResolver"
-		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
-		<property name="maxUploadSize" value="500000" />
-	</bean>
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver" />
 
 	<!-- Connect Database by Spring Data JPA -->
 	<bean id="dataSource"

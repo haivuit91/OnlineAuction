@@ -13,8 +13,8 @@
 					<ul th:if="${#fields.hasErrors('*')}">
 					  	<li th:each="err : ${#fields.errors('*')}" th:text="${err}">Input is incorrect</li>
 					</ul>
-					<input type="hidden" class="input-xlarge" id="id" th:field="*{id}" />
-					<input type="hidden" class="input-xlarge" id="pwd" th:field="*{pwd}" />
+					<input type="hidden" th:field="*{id}" />
+					<input type="hidden" id="pwd" th:field="*{pwd}" />
 					<div th:class="${#fields.hasErrors('fullName')} ? 'control-group has-error' : control-group">
 						<label class="control-label" for="fullName">Full name</label>
 						<div class="controls">

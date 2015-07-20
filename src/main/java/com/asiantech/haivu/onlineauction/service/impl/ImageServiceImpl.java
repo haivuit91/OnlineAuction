@@ -5,8 +5,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
-import javax.servlet.ServletContext;
-
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,9 +19,6 @@ import com.asiantech.haivu.onlineauction.util.HandleImage;
 
 @Service(ImageService.NAME)
 public class ImageServiceImpl implements ImageService {
-
-	@Autowired
-	private ServletContext context;
 
 	@Autowired
 	private HandleImage handleImg;

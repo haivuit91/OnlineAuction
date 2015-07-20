@@ -43,7 +43,7 @@
 						<div class="span5">
 							<div class="form-group">
 		        			 	<label for="itemThumbnail"><b>Image</b></label>
-								<input class="form-control" id="itemThumbnail" name="file" type="file" />
+								<input class="form-control" id="itemThumbnail" name="file" type="file" accept="image/*" />
 							</div>
 							<div th:class="${#fields.hasErrors('bidEndDate')} ? 'form-group has-error' : form-group">
 								<label for="bidEndDate"><b>Bid end date</b></label>
@@ -53,7 +53,7 @@
 								<label for="bidIncremenent"><b>Bid increment</b></label>
 		       					<input class="form-control" id="bidIncremenent" th:field="*{bidIncremenent}" type="number" required="required" placeholder="Bid increment"/>
 							</div>
-							<div th:class="${#fields.hasErrors('bidStatus')} ? 'form-group has-error' : form-group" th:if="${breadcrumbs} == 'Edit item'">
+							<div th:class="${#fields.hasErrors('bidStatus')} ? 'form-group has-error' : form-group" th:if="${action} == 'Edit Item'">
 								<label for="bidStatus"><b>Status</b></label>
 		       					<select class="form-control" id="bidStatus" th:field="*{bidStatus}">
 									<option value="true" >Enable</option>
@@ -80,14 +80,14 @@
 				CKEDITOR.replace('itemDescription');
 				$(function () {
 					$('#bidStartDate').datetimepicker({
-		                format: "dd/mm/yyyy HH:ii",
+		                format: "dd/mm/yyyy hh:ii",
 		                autoclose: true,
 		                todayBtn: true,
 		                language: 'en',
 		                minuteStep: 10
 		            });
 		            $('#bidEndDate').datetimepicker({
-		                format: "dd/mm/yyyy HH:ii",
+		                format: "dd/mm/yyyy hh:ii",
 		                autoclose: true,
 		                todayBtn: true,
 		                language: 'en',

@@ -50,13 +50,13 @@ public class ItemController extends ShowPage {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		Page<Item> item = itemSv.findItemByAccountAndBidStatus(auth.getName(), true, pageable);
 		model.put("listItem", item);
-		model = showHomePage("My product", "user/item_list", model);
+		model = showUserPage("My product", "user/item_list", model);
 		return Constants.TEMPLATE_HOME;
 	}
 
 	@RequestMapping(value = "add-new-item", method = RequestMethod.GET)
 	public String goAddItemPage(Item item, ModelMap model) {
-		model = showHomePage("Add new item", "user/add_edit_item", model);
+		model = showUserPage("Add new item", "user/add_edit_item", model);
 		return Constants.TEMPLATE_HOME;
 	}
 	
@@ -64,14 +64,14 @@ public class ItemController extends ShowPage {
 	public String goEditItemPage(@PathVariable("itemId") long itemId, ModelMap model) {
 		Item item = itemSv.findItemById(itemId);
 		model.put("item", item);
-		model = showHomePage("Edit item", "user/add_edit_item", model);
+		model = showUserPage("Edit item", "user/add_edit_item", model);
 		return Constants.TEMPLATE_HOME;
 	}
 
 	@RequestMapping(value = "save-item", method = RequestMethod.POST)
 	public String saveItem(@Valid Item item, @RequestParam("file") MultipartFile file, BindingResult bindingResult, ModelMap model) {
 		if (bindingResult.hasErrors()) {
-			model = showHomePage("Add new item", "user/add_edit_item", model);
+			model = showUserPage("Add new item", "user/add_edit_item", model);
 			return Constants.TEMPLATE_HOME;
 		}
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();

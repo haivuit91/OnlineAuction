@@ -24,6 +24,8 @@ public interface AccountService extends UserDetailsService {
 	
 	Account addNewAccount(Account account);
 	
+	Account changeInfoAccount(Account account);
+	
 	boolean changePassword(String currentPwd, String newPwd, String email);
 	
 	boolean updateTrustAccount(double trust, Account account);

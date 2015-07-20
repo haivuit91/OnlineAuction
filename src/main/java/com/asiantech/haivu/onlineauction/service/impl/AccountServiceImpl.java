@@ -121,6 +121,15 @@ public class AccountServiceImpl implements AccountService {
 	}
 
 	@Override
+	public Account changeInfoAccount(Account account) {
+		Account acc = accountRepository.findOne(account.getId());
+		Account newAccount = new Account(account.getId(), acc.getPwd(), account.getFullName(), 
+				account.getDateOfBirth(), account.getSex(), acc.getEmail(), acc.getAvatarPath(), acc.getStatus(), acc.getRole(), 
+				acc.getTrust(), acc.getVerification());
+		return accountRepository.save(newAccount);
+	}
+
+	@Override
 	public UserDetails loadUserByUsername(String email)
 			throws UsernameNotFoundException {
 		Account accLogin = findAccountByEmailAndStatus(email, Status.ENABLE);
