@@ -5,7 +5,7 @@ body {
   background: url(../img/page-background.png);
 }
 .section {
-  padding: 30px 0;
+  padding: 15px 0;
   -webkit-transform: translateZ(0);
   -moz-transform: translateZ(0);
   -o-transform: translateZ(0);
@@ -1222,19 +1222,19 @@ span.color-red {
 /*--------------------------------------------------------------------------
 +	Jobs list Style
 --------------------------------------------------------------------------*/
-.jobs-list {
+.item-list {
   width: 100%;
 }
-.jobs-list th {
+.item-list th {
   font-size: 1.1em;
   text-align: left;
   padding: 10px 0;
 }
-.jobs-list td {
+.item-list td {
   padding: 5px 20px 5px 0;
   border-top: 1px solid #E6E6E6;
 }
-.jobs-list tr:last-child td {
+.item-list tr:last-child td {
   border-bottom: 1px solid #E6E6E6;
 }
 .job-position a {
@@ -2540,6 +2540,10 @@ span.color-red {
   width: 33%;
   float: left;
 }
+.mainmenu .mainmenu-submenu-inner > div.search {
+  width: 100%;
+  margin-top: 30px;
+}
 .mainmenu .mainmenu-submenu-inner:before,
 .mainmenu .mainmenu-submenu-inner:after {
   content: " ";
@@ -2613,6 +2617,14 @@ span.color-red {
     float: none;
     padding: 0;
   }
+}
+select.search {
+	border: none;
+	background-color: #eee;
+	color: #3c763d;
+}
+select.search:ACTIVE {
+	border: none;
 }
 /*--------------------------------------------------------------------------
 +	Extras Menu (Cart, Language, Login) Style

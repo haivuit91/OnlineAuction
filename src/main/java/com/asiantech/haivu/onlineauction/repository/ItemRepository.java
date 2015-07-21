@@ -23,6 +23,12 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
 	Page<Item> findByCategorySubAndBidStartDateBeforeAndBidEndDateAfterAndBidStatus(CategorySub categorySub, 
 			Date bidStartDate, Date bidEndDate, boolean bidStatus, Pageable pageable);
 	
+	Page<Item> findByCategorySubAndBidStartDateBeforeAndBidEndDateAfterAndBidStatusAndItemTitleContaining(CategorySub categorySub, 
+			Date bidStartDate, Date bidEndDate, boolean bidStatus, String keyWord, Pageable pageable);
+	
+	Page<Item> findByBidStartDateBeforeAndBidEndDateAfterAndBidStatusAndItemTitleContaining(Date bidStartDate, Date bidEndDate, 
+			boolean bidStatus, String keyWord, Pageable pageable);
+	
 	List<Item> findByCategorySub(CategorySub categorySub);
 	
 	List<Item> findByAccount(Account account);

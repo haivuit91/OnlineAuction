@@ -260,5 +260,56 @@ public class AdminController extends ShowPage {
 		}
 		return check;
 	}
+	
+	// ----------------- Info update -----------------
+	
+	@RequestMapping(value = "profile")
+	public String goProfile(ModelMap model) {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		Account account = accountService.findAccountByEmail(auth.getName());
+		model.put("account", account);
+		model.put("layout", "admin/profile");
+		return Constants.TEMPLATE_ADMIN;
+	}
+	
+	@RequestMapping(value = "profile", method = RequestMethod.POST)
+	public String changeInfo(@Valid Account account, BindingResult bindingResult, ModelMap model) {
+		if (bindingResult.hasErrors()) {
+			model.put("layout", "admin/profile");
+			return Constants.TEMPLATE_ADMIN;
+		}
+		accountService.addNewAccount(account);
+		return "redirect:/admin/profile";
+	}
+	
+	@RequestMapping(value = "change-password")
+	public String goChangePwdPage(ModelMap model) {
+		model.put("layout", "admin/change_password");
+		return Constants.TEMPLATE_ADMIN;
+	}
+	
+	@RequestMapping(value = "change-password", method = RequestMethod.POST)
+	public String changePwdPage(@RequestParam("currentPwd") String currentPwd, @RequestParam("newPwd") String newPwd, 
+			@RequestParam("rePwd") String rePwd, ModelMap model) {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		String msg = "";
+		if (!accountService.changePassword(currentPwd, newPwd, auth.getName())) {
+			model.put("errorCurrentPwd", true);
+			msg = "Your current password was incorrect.";
+		} else if (newPwd == "") {
+			model.put("errorNewPwd", true);
+			msg = "The new password is required and can't be empty.";
+		} else if (!newPwd.equals(rePwd)) {
+			model.put("errorRePwd", true);
+			msg = "Your re enter password was incorrect.";
+		} else {
+			model.put("success", true);
+			msg = "Change password successfully.";
+		}
+		model.put("changePwd", true);
+		model.put("message", msg);
+		model.put("layout", "admin/change_password");
+		return Constants.TEMPLATE_ADMIN;
+	}
 
 }

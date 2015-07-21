@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+	<head>
+	</head>
+	<body>
+		<div class="span10" th:fragment="content">
+			<h2>Edit Your Profile</h2>
+			<form id="edit-profile" class="form-horizontal" th:object="${account}" th:action="@{/admin/profile}" th:method="post">
+				<fieldset>
+					<legend>Your Profile</legend>
+					<input type="hidden" th:field="*{id}" />
+					<input type="hidden" id="pwd" th:field="*{pwd}" />
+					<div class="control-group">
+						<label class="control-label" for="fullName">Full name</label>
+						<div class="controls">
+							<input type="text" class="input-xlarge" id="fullName" th:field="*{fullName}" />
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label" for="email">Email</label>
+						<div class="controls">
+							<input type="text" class="input-xlarge" id="email" readonly="readonly" th:field="*{email}" />
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label" for="sex">Sex</label>
+						<div class="controls">
+							<select class="form-control" id="sex" th:field="*{sex}" style="width: 100px;">
+								<option th:value="1">Male</option>
+								<option th:value="0">Female</option>
+							</select>
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label" for="dateOfBirth">Date of birth</label>
+						<div class="controls">
+							<input type="text" class="input-xlarge" id="dateOfBirth" readonly="readonly" th:field="*{dateOfBirth}" />
+						</div>
+					</div>
+					<div class="form-actions">
+						<button type="submit" class="btn btn-primary">Save</button>
+						<button type="reset" class="btn">Reset</button>
+					</div>
+				</fieldset>
+			</form>
+			<script type="text/javascript">
+				document.getElementById("pwd").value = "123456";
+				$(function () {
+					$('#dateOfBirth').datetimepicker({
+		                format: "dd/mm/yyyy",
+		                autoclose: true,
+		                todayBtn: true,
+		                language: 'en',
+		        		minView: 2,
+		            });
+				});
+			</script>
+		</div>
+	</body>
+</html>

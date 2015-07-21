@@ -16,7 +16,7 @@
 			        		<li sec:authorize="isAnonymous()" ><a th:href="@{/account/login}">Login</a></li>
 			        		<li sec:authorize="isAuthenticated()">Welcome
 			        			<a th:href="@{/user/setting}" sec:authorize="hasRole('ROLE_USER')" sec:authentication="name">User name</a>
-			        			<a th:href="@{/admin/setting}" sec:authorize="hasRole('ROLE_ADMIN')" sec:authentication="name">User name</a>
+			        			<a th:href="@{/admin/profile}" sec:authorize="hasRole('ROLE_ADMIN')" sec:authentication="name">User name</a>
 			        		</li>
 			        		<li sec:authorize="isAuthenticated()"><a th:href="@{/account/logout}" class="logout">Logout</a></li>
 			        	</ul>
@@ -44,6 +44,32 @@
 						</li>
 						<li><a th:href="@{/auctions/finished}">Auction finish</a></li>
 						<li><a th:href="@{#}">Result</a></li>
+						<li class="has-submenu">
+							<a href="#">Search</a>
+							<div class="mainmenu-submenu">
+								<div class="mainmenu-submenu-inner">
+									<div class="search">
+										<div class="container">
+											<div class="row">
+												<div class="col-sm-12">
+													<form th:action="@{/auctions/search}" th:method="get">
+														<div class="input-group input-group-lg">
+															<span class="input-group-addon" id="sizing-addon1">
+																<select class="search" name="id">
+																	<option value="0">All</option>
+																	<option th:each="categorySub : ${listCateSub}" th:value="${categorySub.id}" th:text="${categorySub.cateSubName}">Category name</option>
+																</select>
+															</span>
+															<input type="text" class="form-control" name="key"	placeholder="Search for..." />
+														</div>
+													</form>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</li>
 					</ul>
 				</nav>
 			</div>

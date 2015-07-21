@@ -16,12 +16,13 @@
 							<button type="button" class="close" data-dismiss="alert" aria-label="Close">
 								<span aria-hidden="true">&times;</span>
 							</button>
-							<span th:text="${param.success}">Add new Item successfully.</span>
+							<span th:if="${param.success[0] == 'add'}">Add new Item successfully.</span>
+							<span th:if="${param.success[0] == 'edit'}">Edit Item successfully.</span>
 						</div>
 						<div class="blog-post blog-single-post">
 		        			<h2>Item list</h2>
 		        			<a class="btn btn-blue" th:href="@{/item/add-new-item}">Add item</a>
-							<table class="jobs-list">
+							<table class="item-list">
 		    					<tr>
 		    						<th>Id</th>
 		    						<th>Image</th>
@@ -79,7 +80,9 @@
 				</div>
 			</div>
 			<script type="text/javascript">
-				$(".btn-delete").confirm({
+			$(".item-list tr").each(function() {
+				var $this = $(this);
+				$this.find('.btn-delete').confirm({
 					confirm : function(button) {
 						var itemId = $(button).data("id");
 						$.ajax({
@@ -89,6 +92,7 @@
 							success: function(response) {
 								if(response == true) {
 									alert("Delete Item successful.");
+									$this.remove();
 								} else {
 									alert("Delete Item fail.");
 								};
@@ -102,6 +106,7 @@
 					cancelButton : "No",
 					post : true
 				});
+			});
 			</script>
 		</div>
 	</body>

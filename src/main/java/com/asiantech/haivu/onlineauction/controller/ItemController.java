@@ -75,8 +75,8 @@ public class ItemController extends ShowPage {
 			return Constants.TEMPLATE_HOME;
 		}
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		itemSv.saveItem(item, file, auth.getName());
-		return "redirect:/item/list?success";
+		String acction = itemSv.saveItem(item, file, auth.getName());
+		return "redirect:/item/list?success=" + acction;
 	}
 	
 	@RequestMapping(value = "delete", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)

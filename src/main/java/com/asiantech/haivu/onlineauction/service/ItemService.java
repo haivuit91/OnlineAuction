@@ -23,6 +23,8 @@ public interface ItemService {
 	Page<Item> findItemByBidStatusAndBidEndDate(Pageable pageable);
 
 	Page<Item> findItemByCategorySub(String cateSubName, Pageable pageable);
+	
+	Page<Item> searchItem(Long id, String key, Pageable pageable);
 
 	Item findItemById(long id);
 	
@@ -32,7 +34,7 @@ public interface ItemService {
 	
 	List<Item> findItemListStop();
 	
-	Item saveItem(Item item, MultipartFile file, String email);
+	String saveItem(Item item, MultipartFile file, String email);
 	
 	Item updateCurrentBidItem(Item item, double currentBid);
 	

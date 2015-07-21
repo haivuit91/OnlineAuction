@@ -75,6 +75,18 @@ public class ItemServiceImpl implements ItemService {
 	}
 
 	@Override
+	public Page<Item> searchItem(Long id, String keyWord, Pageable pageable) {
+		Pageable page = PageAbleCommon.customePageable(pageable);
+		if(id != 0) {
+			CategorySub categorySub = categorySubService.findCategorySubById(id);
+			return itemRepository.findByCategorySubAndBidStartDateBeforeAndBidEndDateAfterAndBidStatusAndItemTitleContaining(categorySub, 
+					new Date(), new Date(), true, keyWord, page);
+		}
+		return itemRepository.findByBidStartDateBeforeAndBidEndDateAfterAndBidStatusAndItemTitleContaining(new Date(), 
+				new Date(), true, keyWord, page);
+	}
+
+	@Override
 	public Item findItemById(long id) {
 		return itemRepository.findOne(id);
 	}
@@ -96,7 +108,7 @@ public class ItemServiceImpl implements ItemService {
 
 	@Override
 	@Transactional
-	public Item saveItem(Item item, MultipartFile file, String email) {
+	public String saveItem(Item item, MultipartFile file, String email) {
 		String imageName = "default.png";
 		Account account = accountService.findAccountByEmail(email);
 		if (item.getId() == 0) {
@@ -114,13 +126,15 @@ public class ItemServiceImpl implements ItemService {
 		return actionSave(true, item, imageName, account);
 	}
 
-	private Item actionSave(boolean edit, Item item, String imageName, Account account) {
+	private String actionSave(boolean edit, Item item, String imageName, Account account) {
+		String acction = "edit";
 		Item itemTmp;
 		if (!edit) {
 			itemTmp = new Item(item.getItemTitle(), item.getItemDescription(),
 					imageName, item.getMinimumBid(), item.getBidIncremenent(),
 					item.getBidStartDate(), item.getBidEndDate(), item.isBidStatus(), account,
 					item.getCategorySub());
+			acction = "add";
 		} else {
 			Item accItem = itemRepository.findOne(item.getId());
 			itemTmp = new Item(item.getId(), item.getItemTitle(),
@@ -131,7 +145,8 @@ public class ItemServiceImpl implements ItemService {
 					item.isBidStatus(), accItem.getAccount(),
 					item.getCategorySub());
 		}
-		return itemRepository.save(itemTmp);
+		itemRepository.save(itemTmp);
+		return acction;
 	}
 
 	@Override
