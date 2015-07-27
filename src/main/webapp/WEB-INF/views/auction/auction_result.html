@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org" lang="en"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+	<head>
+	</head>
+	<body>
+		<div class="eshop-section section" th:fragment="content">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-12">
+						<table class="winner">
+							<tr th:each="item : ${listItem.content}">
+								<td class="image">
+									<a th:href="@{'/auctions/item/' + ${item.id}}"><img th:src="@{'/image/' + ${item.itemThumbnail}}" th:alt="${item.itemTitle}" /></a>
+								</td>
+								<td>
+									<div class="winner-item-title">
+										<a th:href="@{'/auctions/item/' + ${item.id}}" th:text="${item.itemTitle}">Title</a>
+									</div>
+									<div class="feature">
+										Start bid: <span th:text="${#calendars.format(item.bidStartDate,'dd/MM/yyyy')}">Date</span> at <span th:text="${#calendars.format(item.bidStartDate,'HH:mm')}">Hour</span>
+									</div>
+									<div class="feature">
+										End bid: <span th:text="${#calendars.format(item.bidEndDate,'dd/MM/yyyy')}">Date</span> at <span th:text="${#calendars.format(item.bidEndDate,'HH:mm')}">Hour</span>
+									</div>
+								</td>
+								<td class="member">
+									<span th:text="${item.account.email}">Member</span>
+								</td>
+								<td class="price">
+									$<span id="curent-member" data-toggle="tooltip" data-placement="bottom" title="" th:text="${item.currentBid}">Price</span>
+								</td>
+								<td class="time">
+									<span th:text="${#calendars.format(item.bidEndDate,'dd/MM/yyyy')}">Time</span>
+								</td>
+							</tr>
+						</table>
+					</div>
+				</div>
+				<div class="pagination-wrapper" th:if="${not #lists.isEmpty(listItem.content)}">
+					<ul class="pagination pagination-sm">
+						<li th:if="${(listItem.number + 1) == 1}" class="disabled">
+							<span aria-hidden="true">&laquo;</span>
+						</li>
+						<li th:unless="${(listItem.number + 1) == 1}">
+							<a th:href="@{/auctions/all(page=${listItem.number})}" aria-label="Previous">
+								<span aria-hidden="true">&laquo;</span>
+							</a>
+						</li>
+						<li th:each="i : ${#numbers.sequence(1, listItem.totalPages)}" th:class="${(listItem.number + 1) == i} ? active">
+							<span th:if="${(listItem.number + 1) == i}" th:text="${i}"></span>
+							<a th:href="@{/auctions/all(page=${i})}" th:unless="${(listItem.number + 1) == i}" th:text="${i}"></a>
+						</li>
+						<li th:if="${(listItem.number + 1) == listItem.totalPages}" class="disabled">
+							<span aria-hidden="true">&raquo;</span>
+						</li>
+						<li th:unless="${(listItem.number + 1) == listItem.totalPages}">
+							<a th:href="@{/auctions/all(page=${(listItem.number + 1) + 1})}" aria-label="Next">
+								<span aria-hidden="true">&raquo;</span>
+							</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

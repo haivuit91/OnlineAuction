@@ -29,7 +29,7 @@
 						<td><input type="checkbox" /></td>
 						<td th:text="${item.id}">Id</td>
 		    			<td class="images"><img th:src="@{'/image/' + ${item.itemThumbnail}}" th:alt="${item.itemTitle}" /></td>
-		    			<td><a th:href="@{#}" th:text="${item.itemTitle}">Item title</a></td>
+		    			<td><a th:href="@{'/admin/item-management/' + ${item.id}}" th:text="${item.itemTitle}">Item title</a></td>
 		    			<td th:text="${#calendars.format(item.bidStartDate,'dd/MM/yyyy HH:mm')}">Bid start date</td>
 		    			<td th:text="${#calendars.format(item.bidEndDate,'dd/MM/yyyy HH:mm')}">Bid end date</td>
 		    			<td th:text="${item.minimumBid}">Minimum Bid</td>

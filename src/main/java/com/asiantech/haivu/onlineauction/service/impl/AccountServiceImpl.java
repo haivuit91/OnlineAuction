@@ -99,7 +99,7 @@ public class AccountServiceImpl implements AccountService {
 		Account acc = new Account(pwd, account.getFullName(), account.getEmail(), verifyCode);
 		Account accountVerify = accountRepository.save(acc);
 		if(accountVerify != null) {
-			String verifyLink = "http://localhost:8081/OnlineAuction/account/verify-email?uid=" + accountVerify.getId() + "&code=" + verifyCode;
+			String verifyLink = "http://localhost:8080/OnlineAuction/account/verify-email?uid=" + accountVerify.getId() + "&code=" + verifyCode;
 			verificationMailSv.verifyEmail(accountVerify.getEmail(), "Verify your account", verifyLink);
 			Thread t = new Thread(verificationMailSv);
 	        t.start();
@@ -220,7 +220,7 @@ public class AccountServiceImpl implements AccountService {
 		Account acc = new Account(pwd, account.getFullName(), account.getEmail(), account.getRole(), verifyCode);
 		Account accountConfirm = accountRepository.save(acc);
 		if(accountConfirm != null) {
-			String verifyLink = "Pass: " + randomPwd + ", http://localhost:8081/OnlineAuction/account/verify-email?uid=" + accountConfirm.getId() + "&code=" + verifyCode;
+			String verifyLink = "Pass: " + randomPwd + ", http://localhost:8080/OnlineAuction/account/verify-email?uid=" + accountConfirm.getId() + "&code=" + verifyCode;
 			verificationMailSv.verifyEmail(accountConfirm.getEmail(), "Verify your account", verifyLink);
 			Thread t = new Thread(verificationMailSv);
 		    t.start();

@@ -9,6 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.Max;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -19,10 +20,11 @@ public class Item {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name = "id", length = 1000)
+	@Column(name = "id")
 	private long id;
 
 	@Column(name = "item_title", length = 100)
+	@Max(value = 1000)
 	@NotNull(message = "The item title is required and can't be empty")
 	private String itemTitle;
 

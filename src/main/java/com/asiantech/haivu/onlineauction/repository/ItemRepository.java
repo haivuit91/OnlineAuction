@@ -12,6 +12,8 @@ import com.asiantech.haivu.onlineauction.model.CategorySub;
 import com.asiantech.haivu.onlineauction.model.Item;
 
 public interface ItemRepository extends JpaRepository<Item, Long> {
+	
+	Page<Item> findByAccount(Account accountId, Pageable pageable);
 
 	Page<Item> findByAccountAndBidStatus(Account account, boolean bidStatus, Pageable pageable);
 
@@ -34,6 +36,8 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
 	List<Item> findByAccount(Account account);
 	
 	List<Item> findByBidStatusAndBidEndDateBefore(boolean bidStatus, Date bidEndDate);
+	
+	int countByAccount(Account account);
 	
 	Long deleteByCategorySub(CategorySub categorySub);
 	

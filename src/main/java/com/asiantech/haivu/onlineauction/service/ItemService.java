@@ -15,6 +15,8 @@ public interface ItemService {
 	public static String NAME = "itemService";
 	
 	Page<Item> findAllItem(Pageable pageable);
+	
+	Page<Item> findItemByAccount(long accountId, Pageable pageable);
 
 	Page<Item> findItemByAccountAndBidStatus(String email, boolean status, Pageable pageable);
 
@@ -33,6 +35,8 @@ public interface ItemService {
 	List<Item> findAllItemByAccount(Account account);
 	
 	List<Item> findItemListStop();
+	
+	int countItemByAccount(long accountId);
 	
 	String saveItem(Item item, MultipartFile file, String email);
 	

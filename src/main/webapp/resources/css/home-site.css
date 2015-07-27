@@ -272,8 +272,8 @@ a:hover {
   height: 88px;
   overflow: hidden;
   position: absolute;
-  top: 0;
-  right: 0;
+  top: -8px;
+  right: -8px;
 }
 .ribbon-wrapper-detail {
   width: 85px;
@@ -1033,24 +1033,24 @@ span.color-red {
   border-bottom: 0;
 }
 /*--------------------------------------------------------------------------
-+	Shopping Cart Style
++	Winner Style
 --------------------------------------------------------------------------*/
-.shopping-cart {
+.winner {
   margin: 10px 0 0 0;
   width: 100%;
   border-collapse: separate;
   border-spacing: 0 10px;
 }
-.shopping-cart a {
+.winner a {
   color: #535b60;
 }
-.shopping-cart tr {
+.winner tr {
   background: #FFF;
 }
-.shopping-cart td {
+.winner td {
   padding: 10px;
 }
-.shopping-cart td:first-child {
+.winner td:first-child {
   -webkit-border-radius: 5px 0 0 5px;
   -webkit-background-clip: padding-box;
   -moz-border-radius: 5px 0 0 5px;
@@ -1059,7 +1059,7 @@ span.color-red {
   background-clip: padding-box;
   margin-left: 10px;
 }
-.shopping-cart td:last-child {
+.winner td:last-child {
   -webkit-border-radius: 0 5px 5px 0;
   -webkit-background-clip: padding-box;
   -moz-border-radius: 0 5px 5px 0;
@@ -1068,61 +1068,41 @@ span.color-red {
   background-clip: padding-box;
   margin-right: 10px;
 }
-.shopping-cart .image,
-.shopping-cart .image img {
+.winner .image,
+.winner .image img {
   max-width: 150px;
 }
-.shopping-cart .title {
+.winner .title {
   font-size: 1.1em;
 }
-.shopping-cart .feature {
+.winner .feature {
   font-size: 0.8em;
 }
-.shopping-cart .color span {
-  display: inline-block;
-  *display: inline;
-  width: 8px;
-  height: 8px;
-  border-width: 1px;
-  border-style: solid;
+.winner .member {
+  width: 120px;
 }
-.shopping-cart .quantity {
-  width: 80px;
-}
-.shopping-cart .price {
+.winner .price {
   color: #535b60;
   font-size: 1.2em;
   width: 80px;
   text-align: center;
 }
-.shopping-cart .actions {
+.winner .time {
   width: 80px;
 }
-.shopping-cart .actions .btn {
-  margin-bottom: 5px;
-}
-.cart-totals {
-  margin: 20px 0 30px 0;
-  border-top: 2px solid #535b60;
-  font-size: 1.1em;
-  line-height: 24px;
-  text-align: right;
-  width: 100%;
-}
-.cart-totals td {
-  width: 150px;
-  padding: 3px 0;
-}
-.cart-totals .cart-grand-total {
-  font-size: 1.3em;
-}
 @media (max-width: 500px) {
-  .shopping-cart .image {
+  .winner .image {
     display: none;
   }
-  .cart-item-title {
-    font-size: 0.8em;
+  .winner-item-title {
+    font-size: 0.9em;
   }
+	.winner .time {
+	  display: none;
+	}
+	.winner .feature {
+  		display: none;
+   }
 }
 /*--------------------------------------------------------------------------
 +	Products Slider Style

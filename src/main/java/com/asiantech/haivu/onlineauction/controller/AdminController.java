@@ -23,10 +23,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.asiantech.haivu.onlineauction.model.Account;
+import com.asiantech.haivu.onlineauction.model.Bid;
 import com.asiantech.haivu.onlineauction.model.Category;
 import com.asiantech.haivu.onlineauction.model.CategorySub;
 import com.asiantech.haivu.onlineauction.model.Item;
 import com.asiantech.haivu.onlineauction.service.AccountService;
+import com.asiantech.haivu.onlineauction.service.BidService;
 import com.asiantech.haivu.onlineauction.service.CategoryService;
 import com.asiantech.haivu.onlineauction.service.CategorySubService;
 import com.asiantech.haivu.onlineauction.service.ItemService;
@@ -47,6 +49,9 @@ public class AdminController extends ShowPage {
 	
 	@Autowired
 	private ItemService itemService;
+	
+	@Autowired
+	private BidService bidService;
 
 	// @Autowired
 	// private Mapper mapper;
@@ -71,7 +76,7 @@ public class AdminController extends ShowPage {
 
 	@RequestMapping(value = "user-management")
 	public String goUserManagementPage(
-			@PageableDefault(page = 1, size = 5, sort = "id", direction = Direction.DESC) Pageable pageable, ModelMap model) {
+			@PageableDefault(page = 1, size = 10, sort = "id", direction = Direction.DESC) Pageable pageable, ModelMap model) {
 		model = getListAccount(pageable, model);
 		model.put("layout", "admin/user_management");
 		return Constants.TEMPLATE_ADMIN;
@@ -118,7 +123,7 @@ public class AdminController extends ShowPage {
 	
 	@RequestMapping(value = "category-management")
 	public String goCategoryManagementPage(
-			@PageableDefault(page = 1, size = 5, sort = "id", direction = Direction.ASC) Pageable pageable, ModelMap model) {
+			@PageableDefault(page = 1, size = 10, sort = "id", direction = Direction.ASC) Pageable pageable, ModelMap model) {
 		model = getListCategory(pageable, model);
 		model.put("layout", "admin/category_management");
 		return Constants.TEMPLATE_ADMIN;
@@ -165,7 +170,7 @@ public class AdminController extends ShowPage {
 	
 	@RequestMapping(value = "list-category-sub/{categoryId}")
 	public String goCategorySubPage(
-			@PageableDefault(page = 1, size = 5, sort = "id", direction = Direction.ASC) Pageable pageable,
+			@PageableDefault(page = 1, size = 10, sort = "id", direction = Direction.ASC) Pageable pageable,
 			@PathVariable("categoryId") long categoryId, ModelMap model) {
 		model = getListCategorySub(categoryId, pageable, model);
 		model.put("categoryId", categoryId);
@@ -217,9 +222,19 @@ public class AdminController extends ShowPage {
 	
 	@RequestMapping(value = "item-management")
 	public String goItemManagementPage(
-			@PageableDefault(page = 1, size = 5, sort = "id", direction = Direction.ASC) Pageable pageable, ModelMap model) {
+			@PageableDefault(page = 1, size = 10, sort = "id", direction = Direction.ASC) Pageable pageable, ModelMap model) {
 		model = getListItem(pageable, model);
 		model.put("layout", "admin/item_management");
+		return Constants.TEMPLATE_ADMIN;
+	}
+	
+	@RequestMapping(value = "item-management/{itemId}")
+	public String goItemDetailPage(ModelMap model, @PathVariable("itemId") long itemId) {
+		Item item = itemService.findItemById(itemId);
+		List<Bid> bidList =  bidService.findBidByItem(item);
+		model.put("item", item);
+		model.put("bidList", bidList);
+		model.put("layout", "admin/item_detail");
 		return Constants.TEMPLATE_ADMIN;
 	}
 	

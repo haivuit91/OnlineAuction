@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+	<head>
+	</head>
+	<body>
+		<div class="span10" th:fragment="content">
+			<h2 th:text="${item.itemTitle}">Item detail</h2>
+			<div class="row">
+				<div class="span7">
+					<table>
+						<tr>
+							<td colspan="2"><img th:src="@{'/image/' + ${item.itemThumbnail}}" /></td>
+						</tr>
+						<tr>
+							<td>Bid start date:</td>
+							<td th:text="${item.bidStartDate}"></td>
+						</tr>
+						<tr>
+							<td>Bid end date:</td>
+							<td th:text="${item.bidEndDate}"></td>
+						</tr>
+					</table>
+				</div>
+				<div class="span5">
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

@@ -82,11 +82,7 @@ public class ItemController extends ShowPage {
 	@RequestMapping(value = "delete", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public boolean deleteItem(@RequestParam("itemId") long itemId) {
-		boolean check = false;
-		if(itemSv.deleteItem(itemId)) {
-			check = true;
-		}
-		return check;
+		return itemSv.deleteItem(itemId);
 	}
 
 }

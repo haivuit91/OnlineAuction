@@ -49,6 +49,13 @@ public class ItemServiceImpl implements ItemService {
 	}
 
 	@Override
+	public Page<Item> findItemByAccount(long accountId, Pageable pageable) {
+		Pageable page = PageAbleCommon.customePageable(pageable);
+		Account account = accountService.findAccountById(accountId);
+		return itemRepository.findByAccount(account, page);
+	}
+
+	@Override
 	public Page<Item> findItemByAccountAndBidStatus(String email, boolean bidStatus, Pageable pageable) {
 		Pageable page = PageAbleCommon.customePageable(pageable);
 		Account account = accountService.findAccountByEmail(email);
@@ -104,6 +111,12 @@ public class ItemServiceImpl implements ItemService {
 	@Override
 	public List<Item> findItemListStop() {
 		return itemRepository.findByBidStatusAndBidEndDateBefore(true, new Date());
+	}
+
+	@Override
+	public int countItemByAccount(long accountId) {
+		Account account = accountService.findAccountById(accountId);
+		return itemRepository.countByAccount(account);
 	}
 
 	@Override

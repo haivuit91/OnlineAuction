@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org" lang="en"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+	<head>
+	</head>
+	<body>
+		<div class="eshop-section section" th:fragment="content">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-12">
+						<table class="item-list">
+	    					<tr>
+	    						<th>SNo</th>
+	    						<th>Seller</th>
+	    						<th>Ratings</th>
+	    						<th>Product</th>
+	    					</tr>
+	    					<tr class="top-rating" th:each="account, iterationStatus : ${accounts.content}">
+	    						<td th:text="${iterationStatus.count}">SNo</td>
+	    						<td>
+	    							<a class="seller" th:href="@{'/auctions/user/' + ${account.id}}" th:text="${account.email}" th:attr="data-seller = ${account.id}">Seller</a>
+	    						</td>
+	    						<td>
+	    							<div>
+	    								<input id="rating" th:value="${account.trust}" type="number" class="rating" min="0" max="10" step="1" data-size="ss" data-stars="10" />
+	    							</div>
+	    							<div>
+	    								Ratings: <span th:text="${account.trust}">Rating</span>/10 from <span class="total-user">Total user</span> users.
+	    							</div>
+	    						</td>
+	    						<td>
+	    							<span class="label label-danger count-products">Products</span>
+	    						</td>
+	    					</tr>
+	    				</table>
+					</div>
+				</div>
+			</div>
+			<script type="text/javascript">
+				$('.top-rating').each(function() {
+					var $this = $(this);
+					var accountId = $this.find('.seller').data('seller');
+					$this.find('#rating').rating({
+						disabled: true,
+						showClear: false,
+						showCaption: false
+					});
+					countUser($this, accountId);
+					countItem($this, accountId);
+				});
+				function countUser($this, accountId) {
+					$.ajax({
+						type: "POST",
+						url: "count",
+						data: {accountId : accountId},
+						success: function(response) {
+							$this.find('.total-user').html(response);
+						}
+					});
+				};
+				function countItem($this, accountId) {
+					$.ajax({
+						type: "POST",
+						url: "count-item",
+						data: {accountId : accountId},
+						success: function(response) {
+							$this.find('.count-products').html(response);
+						}
+					});
+				};
+			</script>
+		</div>
+	</body>
+</html>

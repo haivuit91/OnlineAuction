@@ -5,10 +5,10 @@
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
 	<!-- Task -->
-<!-- 	<bean id="runScheduler" class="com.asiantech.haivu.onlineauction.taskscheduler.SendMailToWinner" /> -->
+	<bean id="runScheduler" class="com.asiantech.haivu.onlineauction.taskscheduler.SendMailToWinner" />
 
-<!-- 	<task:scheduled-tasks> -->
-<!-- 		<task:scheduled ref="runScheduler" method="run" fixed-delay="60000" /> -->
-<!-- 	</task:scheduled-tasks> -->
+	<task:scheduled-tasks>
+		<task:scheduled ref="runScheduler" method="run" fixed-delay="60000" />
+	</task:scheduled-tasks>
 
 </beans>
